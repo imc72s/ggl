@@ -1,332 +1,1722 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NSFW GIF BYPASSER PRO - KERNEL V.2.0</title>
-    <style>
-        :root {
-            --bg-color: #0a0b10;
-            --primary-blue: #007aff;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent-glow: rgba(0, 122, 255, 0.3);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIF Bypass Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+<style>
+/* ================================================================
+   ROOT VARIABLES
+================================================================ */
+:root {
+  --bg-0:       #04070f;
+  --bg-1:       #080d1a;
+  --bg-2:       #0c1225;
+  --blue-a:     #1a6eff;
+  --blue-b:     #0d4fc7;
+  --blue-c:     #3b8bfd;
+  --blue-glow:  rgba(26,110,255,0.25);
+  --blue-dim:   rgba(26,110,255,0.1);
+  --glass-bg:   rgba(255,255,255,0.035);
+  --glass-bd:   rgba(100,160,255,0.1);
+  --glass-bd2:  rgba(100,160,255,0.2);
+  --text-1:     #e4eaf8;
+  --text-2:     #8899bb;
+  --text-3:     #4a5c80;
+  --red:        #f04444;
+  --green:      #22d87a;
+  --amber:      #f0a844;
+  --purple:     #9c6bff;
+  --radius:     14px;
+  --radius-sm:  8px;
+  --font-main:  'Sora', sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-color);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+/* ================================================================
+   BASE
+================================================================ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-        }
+html { font-size:15px; scroll-behavior:smooth; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+body {
+  background: var(--bg-0);
+  color: var(--text-1);
+  font-family: var(--font-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-        .header h1 {
-            font-size: 2rem;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #007aff, #00ffcc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+/* Grid noise background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(26,110,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,110,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
 
-        .input-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+/* Radial glow top-center */
+body::after {
+  content: '';
+  position: fixed;
+  top: -180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(26,110,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-        .card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--glass-border);
-            padding: 20px;
-            border-radius: 15px;
-        }
+#app {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
 
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: white;
-            box-sizing: border-box;
-        }
+/* ================================================================
+   TYPOGRAPHY
+================================================================ */
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 0%, var(--blue-c) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-        .mode-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-top: 20px;
-        }
+h2 {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-c);
+  margin-bottom: 14px;
+}
 
-        .mode-item {
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.3s;
-        }
+p { line-height: 1.6; color: var(--text-2); font-size: 0.875rem; }
 
-        .mode-item.active {
-            background: var(--primary-blue);
-            border-color: #00c3ff;
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
+.mono { font-family: var(--font-mono); }
 
-        .preview-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 30px;
-        }
+/* ================================================================
+   GLASS CARD
+================================================================ */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-bd);
+  border-radius: var(--radius);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+}
 
-        .preview-box {
-            text-align: center;
-        }
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(100,160,255,0.3), transparent);
+}
 
-        .preview-box canvas, .preview-box img {
-            width: 100%;
-            max-height: 300px;
-            border-radius: 12px;
-            background: #000;
-            object-fit: contain;
-        }
+/* ================================================================
+   HEADER
+================================================================ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
 
-        .kernel-log {
-            margin-top: 20px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 8px;
-            height: 80px;
-            overflow-y: auto;
-            color: #00ffcc;
-        }
+.header-left {}
 
-        .progress-wrapper {
-            margin-top: 20px;
-        }
+.header-sub {
+  font-size: 0.8rem;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--blue-dim);
+  border: 1px solid rgba(26,110,255,0.3);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--blue-c);
+  letter-spacing: 0.06em;
+}
 
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-blue), #00ffcc);
-            transition: width 0.3s;
-        }
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--blue-a);
+  box-shadow: 0 0 6px var(--blue-a);
+  animation: pulse 2s ease-in-out infinite;
+}
 
-        .control-btns {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
 
-        button {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+/* ================================================================
+   TWO-COLUMN LAYOUT
+================================================================ */
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
 
-        .btn-process { background: var(--primary-blue); color: white; }
-        .btn-save { background: #28a745; color: white; display: none; }
+.row3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
 
-        button:hover { opacity: 0.8; transform: translateY(-2px); }
+@media (max-width: 768px) {
+  .row2, .row3 { grid-template-columns: 1fr; }
+  h1 { font-size: 1.5rem; }
+}
 
-        .recommended-tag {
-            font-size: 10px;
-            background: #ffcc00;
-            color: black;
-            padding: 2px 5px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-    </style>
+/* ================================================================
+   SOURCE PANEL
+================================================================ */
+.source-panel { margin-bottom: 16px; }
+
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 16px;
+  background: rgba(0,0,0,0.3);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  width: fit-content;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: var(--blue-b);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(13,79,199,0.5);
+}
+
+.tab-btn:hover:not(.active) { color: var(--text-1); background: rgba(255,255,255,0.05); }
+
+.upload-zone {
+  border: 1.5px dashed var(--glass-bd2);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+  border-color: var(--blue-a);
+  background: var(--blue-dim);
+  box-shadow: inset 0 0 30px rgba(26,110,255,0.06);
+}
+
+.upload-zone input[type=file] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.upload-icon {
+  width: 48px; height: 48px;
+  margin: 0 auto 14px;
+  opacity: 0.4;
+}
+
+.upload-zone .hint {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-3);
+  margin-top: 6px;
+}
+
+.url-input-wrap { display: flex; gap: 10px; }
+
+.url-input {
+  flex: 1;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--glass-bd);
+  border-radius: var(--radius-sm);
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.url-input:focus { border-color: var(--blue-a); box-shadow: 0 0 0 2px var(--blue-dim); }
+.url-input::placeholder { color: var(--text-3); }
+
+/* ================================================================
+   BUTTONS
+================================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--blue-a), var(--blue-b));
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px var(--blue-glow);
+}
+
+.btn:active:not(:disabled) { transform: translateY(0); }
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--glass-bd2);
+  color: var(--text-2);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--blue-a);
+  color: var(--blue-c);
+  background: var(--blue-dim);
+  box-shadow: none;
+}
+
+.btn-green {
+  background: linear-gradient(135deg, #1a9c4f, #0f7a3c);
+}
+
+.btn-green:hover:not(:disabled) {
+  box-shadow: 0 4px 20px rgba(26,156,79,0.4);
+}
+
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 0.82rem;
+}
+
+/* ================================================================
+   MODE CARDS
+================================================================ */
+.modes-section { margin-bottom: 16px; }
+
+.modes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.mode-card {
+  border: 1px solid var(--glass-bd);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(0,0,0,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-card:hover {
+  border-color: var(--glass-bd2);
+  background: rgba(26,110,255,0.04);
+}
+
+.mode-card.selected {
+  border-color: var(--blue-a);
+  background: rgba(26,110,255,0.07);
+  box-shadow: 0 0 0 1px rgba(26,110,255,0.2), inset 0 0 20px rgba(26,110,255,0.04);
+}
+
+.mode-card.selected::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue-b), var(--blue-c));
+}
+
+.mode-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.mode-name {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-1);
+  flex: 1;
+}
+
+.mode-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.tag-rec {
+  background: rgba(26,110,255,0.2);
+  border: 1px solid rgba(26,110,255,0.4);
+  color: var(--blue-c);
+}
+
+.tag-max {
+  background: rgba(240,68,68,0.15);
+  border: 1px solid rgba(240,68,68,0.35);
+  color: #f07070;
+}
+
+.mode-desc {
+  font-size: 0.75rem;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.mode-indicator {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  gap: 4px;
+}
+
+.ind-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+
+.ind-dot.filled { background: var(--blue-a); }
+
+/* ================================================================
+   SETTINGS PANEL
+================================================================ */
+.settings-panel { margin-bottom: 16px; }
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.setting-item label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.setting-item label span.val {
+  color: var(--blue-c);
+  font-weight: 600;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(100,160,255,0.15);
+  border-radius: 999px;
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--blue-a);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--blue-glow);
+  transition: box-shadow 0.2s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 14px var(--blue-a);
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--blue-a);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px var(--blue-glow);
+}
+
+/* ================================================================
+   PROCESS BUTTON ROW
+================================================================ */
+.process-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* ================================================================
+   PROGRESS SECTION
+================================================================ */
+.progress-section { margin-bottom: 16px; }
+
+.progress-bar-wrap {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--glass-bd);
+  border-radius: 999px;
+  height: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--blue-b), var(--blue-c));
+  border-radius: 999px;
+  transition: width 0.2s ease;
+  box-shadow: 0 0 10px var(--blue-glow);
+  position: relative;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 30px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+  border-radius: 999px;
+}
+
+.kernel-log {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-2);
+  line-height: 1.8;
+  max-height: 120px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-bd);
+}
+
+.kernel-log::-webkit-scrollbar { width: 4px; }
+.kernel-log::-webkit-scrollbar-track { background: transparent; }
+.kernel-log::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 999px; }
+
+.log-line { color: var(--text-2); }
+.log-line.success { color: var(--green); }
+.log-line.warn { color: var(--amber); }
+.log-line.error { color: var(--red); }
+.log-line.info { color: var(--blue-c); }
+.log-line.dim { color: var(--text-3); }
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+
+/* ================================================================
+   PREVIEW SECTION
+================================================================ */
+.preview-section { margin-bottom: 16px; }
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) { .preview-grid { grid-template-columns: 1fr; } }
+
+.preview-box {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--glass-bd);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--glass-bd);
+  background: rgba(0,0,0,0.2);
+}
+
+.preview-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.preview-label.orig { color: var(--text-3); }
+.preview-label.byp { color: var(--blue-c); }
+
+.preview-meta {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-3);
+}
+
+.preview-img-wrap {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: repeating-conic-gradient(rgba(255,255,255,0.025) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px;
+}
+
+.preview-img-wrap img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: 6px;
+  display: block;
+}
+
+.preview-placeholder {
+  text-align: center;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.8;
+}
+
+/* ================================================================
+   EXPORT PANEL
+================================================================ */
+.export-panel { margin-bottom: 16px; }
+
+.format-select-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.format-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.3);
+  border: 1.5px solid var(--glass-bd);
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.format-btn.selected {
+  border-color: var(--blue-a);
+  color: var(--blue-c);
+  background: var(--blue-dim);
+}
+
+.format-btn:hover:not(.selected) {
+  border-color: var(--glass-bd2);
+  color: var(--text-1);
+}
+
+.format-icon {
+  width: 22px; height: 22px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.icon-gif { background: linear-gradient(135deg, #1a6eff, #0d4fc7); color: #fff; }
+.icon-mp4 { background: linear-gradient(135deg, #7c3aed, #5b21b6); color: #fff; }
+
+.export-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.export-note {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-3);
+  line-height: 1.6;
+  padding: 10px 14px;
+  background: rgba(26,110,255,0.04);
+  border: 1px solid rgba(26,110,255,0.1);
+  border-radius: var(--radius-sm);
+  margin-top: 14px;
+}
+
+/* ================================================================
+   STAT CHIPS
+================================================================ */
+.stat-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.stat-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--glass-bd);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+}
+
+.stat-chip .stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stat-chip .stat-val {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--blue-c);
+}
+
+/* ================================================================
+   DIVIDER
+================================================================ */
+.divider {
+  border: none;
+  border-top: 1px solid var(--glass-bd);
+  margin: 6px 0;
+}
+
+/* ================================================================
+   HIDDEN UTIL
+================================================================ */
+.hidden { display: none !important; }
+
+/* ================================================================
+   SPIN ANIMATION
+================================================================ */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinning { animation: spin 1s linear infinite; }
+
+/* ================================================================
+   ALERTS
+================================================================ */
+.alert {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.alert-warn {
+  background: rgba(240,168,68,0.08);
+  border: 1px solid rgba(240,168,68,0.25);
+  color: var(--amber);
+}
+
+.alert-info {
+  background: rgba(26,110,255,0.06);
+  border: 1px solid rgba(26,110,255,0.18);
+  color: var(--blue-c);
+}
+
+.alert-success {
+  background: rgba(34,216,122,0.06);
+  border: 1px solid rgba(34,216,122,0.2);
+  color: var(--green);
+}
+</style>
 </head>
 <body>
+<div id="app">
 
-<div class="container">
-    <div class="header">
-        <h1>AI FILTER BYPASSER</h1>
-        <p>Advanced Kernel-Level Encryption & Frame Modification</p>
+  <!-- ====== HEADER ====== -->
+  <div class="header">
+    <div class="header-left">
+      <h1>GIF Bypass Tool</h1>
+      <div class="header-sub">pixel-transform engine v3.1 — evade AI content classifiers</div>
+    </div>
+    <div class="badge">
+      <div class="badge-dot"></div>
+      client-side only
+    </div>
+  </div>
+
+  <!-- ====== SOURCE PANEL ====== -->
+  <div class="card source-panel">
+    <h2>Source</h2>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('file')" id="tab-file">Upload File</button>
+      <button class="tab-btn" onclick="switchTab('url')" id="tab-url">URL</button>
     </div>
 
-    <div class="input-section">
-        <div class="card">
-            <label>Upload GIF/Video</label>
-            <input type="file" id="fileInput" accept="image/gif,video/mp4">
+    <!-- File Upload -->
+    <div id="pane-file">
+      <div class="upload-zone" id="upload-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <input type="file" accept=".gif,image/gif" onchange="handleFileInput(event)" id="file-input">
+        <svg class="upload-icon" viewBox="0 0 48 48" fill="none">
+          <rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" stroke-width="2" fill="none" opacity="0.5"/>
+          <path d="M24 26V18M24 18L20 22M24 18L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 34h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <p style="color:var(--text-2);font-size:0.85rem;font-weight:600;">Drop GIF here or click to browse</p>
+        <p class="hint">Supports animated GIF — max recommended size 30MB</p>
+      </div>
+    </div>
+
+    <!-- URL Input -->
+    <div id="pane-url" class="hidden">
+      <div class="alert-info alert" style="margin-bottom:12px">
+        CORS note: if the URL fails, download the GIF first and use File Upload. Works best with direct .gif links.
+      </div>
+      <div class="url-input-wrap">
+        <input type="text" class="url-input" id="url-input" placeholder="https://example.com/animation.gif">
+        <button class="btn" onclick="loadFromURL()">Load</button>
+      </div>
+    </div>
+
+    <!-- Source Info -->
+    <div id="source-info" class="hidden" style="margin-top:14px">
+      <div class="stat-row" id="source-stats"></div>
+    </div>
+  </div>
+
+  <!-- ====== MODE SELECTOR ====== -->
+  <div class="card modes-section">
+    <h2>Processing Mode</h2>
+    <div class="modes-grid" id="modes-grid"></div>
+  </div>
+
+  <!-- ====== SETTINGS PANEL ====== -->
+  <div class="card settings-panel">
+    <h2>Settings</h2>
+    <div id="settings-content"></div>
+  </div>
+
+  <!-- ====== PROCESS ====== -->
+  <div class="process-row">
+    <button class="btn btn-lg" id="process-btn" onclick="startProcessing()" disabled>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" id="process-icon">
+        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor"/>
+      </svg>
+      Process
+    </button>
+    <div id="process-status" style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-3)"></div>
+  </div>
+
+  <!-- ====== PROGRESS ====== -->
+  <div class="card progress-section" id="progress-section" style="display:none">
+    <h2>Processing Kernel</h2>
+    <div class="progress-meta">
+      <span id="progress-step">Idle</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <div class="kernel-log" id="kernel-log">
+      <div class="log-line dim">// kernel log will appear here</div>
+    </div>
+  </div>
+
+  <!-- ====== PREVIEW ====== -->
+  <div class="card preview-section">
+    <h2>Preview</h2>
+    <div class="preview-grid">
+      <div class="preview-box">
+        <div class="preview-header">
+          <span class="preview-label orig">Original</span>
+          <span class="preview-meta" id="orig-meta">—</span>
         </div>
-        <div class="card">
-            <label>URL Source</label>
-            <input type="text" id="urlInput" placeholder="https://...">
+        <div class="preview-img-wrap" id="orig-preview-wrap">
+          <div class="preview-placeholder">Load a GIF to preview</div>
         </div>
+      </div>
+      <div class="preview-box">
+        <div class="preview-header">
+          <span class="preview-label byp">Bypassed</span>
+          <span class="preview-meta" id="byp-meta">—</span>
+        </div>
+        <div class="preview-img-wrap" id="byp-preview-wrap">
+          <div class="preview-placeholder">Process to generate output</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== EXPORT ====== -->
+  <div class="card export-panel">
+    <h2>Export</h2>
+
+    <div class="format-select-row">
+      <button class="format-btn selected" id="fmt-gif" onclick="selectFormat('gif')">
+        <div class="format-icon icon-gif">GIF</div>
+        Animated GIF
+      </button>
+      <button class="format-btn" id="fmt-mp4" onclick="selectFormat('mp4')">
+        <div class="format-icon icon-mp4">MP4</div>
+        Video (MP4/WebM)
+      </button>
     </div>
 
-    <div class="card">
-        <label>Select Bypass Engine (Multi-Select Enabled)</label>
-        <div class="mode-selection" id="modeContainer">
-            <div class="mode-item active" data-mode="jitter">
-                <span class="recommended-tag">RECOMMENDED</span><br>Frame Jittering
-            </div>
-            <div class="mode-item" data-mode="noise">Luminance Noise</div>
-            <div class="mode-item active" data-mode="meta">Scrub Metadata</div>
-            <div class="mode-item" data-mode="shift">Pixel Shifting</div>
-            <div class="mode-item" data-mode="color">Color Compressing</div>
-            <div class="mode-item" data-mode="blur">Edge Softening</div>
-        </div>
+    <div class="export-actions">
+      <button class="btn btn-green" id="download-btn" disabled onclick="downloadOutput()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 2v7M7 9L4 6.5M7 9l3-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Download
+      </button>
+      <button class="btn btn-ghost" id="reprocess-btn" onclick="startProcessing()" disabled>Re-process</button>
     </div>
 
-    <div class="preview-container">
-        <div class="preview-box">
-            <p>Original Stream</p>
-            <div id="originalPlaceholder" style="height:200px; background:#111; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#444;">No Content</div>
-        </div>
-        <div class="preview-box">
-            <p>Bypassed Output</p>
-            <canvas id="outputCanvas"></canvas>
-        </div>
+    <div class="export-note">
+      All processing is client-side. No data is uploaded to any server. Output is generated directly in your browser.
+      GIF export uses gif.js quantization engine. MP4 uses browser MediaRecorder API (outputs WebM in Firefox, MP4/WebM in Chrome).
     </div>
+  </div>
 
-    <div class="progress-wrapper">
-        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px;">
-            <span id="statusText">System Idle</span>
-            <span id="percentText">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-    </div>
-
-    <div class="kernel-log" id="kernelLog">
-        [SYSTEM] Kernel initialized. Ready for bypass operation...
-    </div>
-
-    <div class="card" style="margin-top:20px;">
-        <label>Export Format</label>
-        <select id="exportFormat" style="width:100%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; margin-top:10px;">
-            <option value="gif">High-Quality GIF (Looping)</option>
-            <option value="mp4">H.264 Video (MP4)</option>
-        </select>
-    </div>
-
-    <div class="control-btns">
-        <button class="btn-process" onclick="startBypass()">START ENCRYPTION</button>
-        <button class="btn-save" id="saveBtn" onclick="saveFile()">DOWNLOAD BYPASSED FILE</button>
-    </div>
-</div>
+</div><!-- #app -->
 
 <script>
-    const modes = document.querySelectorAll('.mode-item');
-    const kernelLog = document.getElementById('kernelLog');
-    const progressFill = document.getElementById('progressFill');
-    const statusText = document.getElementById('statusText');
-    const percentText = document.getElementById('percentText');
+// ============================================================
+// GIF BYPASS TOOL — CORE ENGINE
+// ============================================================
 
-    // Toggle Modes
-    modes.forEach(mode => {
-        mode.addEventListener('click', () => {
-            mode.classList.toggle('active');
-            log(`Kernel config updated: ${mode.innerText.replace('\n', ' ')}`);
-        });
+const GIF_WORKER_URL = 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js';
+
+// ---- State ----
+let state = {
+  sourceBuffer: null,
+  sourceFilename: 'output',
+  decodedGIF: null,
+  processedBlobURL: null,
+  processedBlob: null,
+  selectedMode: 'stealth_blend',
+  exportFormat: 'gif',
+  isProcessing: false
+};
+
+// ---- Settings defaults ----
+let modeSettings = {
+  stealth_blend:  { intensity: 2 },
+  chroma_ghost:   { offset: 2 },
+  noise_veil:     { grain: 12 },
+  palette_drift:  { shift: 3 },
+  luma_wash:      { brightness: 2, contrast: 4 },
+  border_seal:    { borderSize: 2 },
+  frame_jitter:   { jitterAmount: 10 },
+  hash_shatter:   {}
+};
+
+// ---- Mode Definitions ----
+const MODES = [
+  {
+    id: 'stealth_blend',
+    name: 'Stealth Blend',
+    tag: 'RECOMMENDED',
+    tagClass: 'tag-rec',
+    desc: 'Combines micro chroma channel offset + grain noise + frame timing variation. Best evasion-to-quality ratio. Visually indistinguishable from original.',
+    intensity: 3
+  },
+  {
+    id: 'chroma_ghost',
+    name: 'Chroma Ghost',
+    tag: '',
+    desc: 'Splits R and B color channels by 1-4 pixels. Changes the per-pixel hash fingerprint while keeping perceived colors virtually identical.',
+    intensity: 2
+  },
+  {
+    id: 'noise_veil',
+    name: 'Noise Veil',
+    tag: '',
+    desc: 'Overlays barely-visible pseudorandom grain across all frames. Fast, simple, low impact on visual quality.',
+    intensity: 2
+  },
+  {
+    id: 'palette_drift',
+    name: 'Palette Drift',
+    tag: '',
+    desc: 'Adds a uniform micro-shift to all RGB color values. Changes the global color fingerprint without altering perceived tones.',
+    intensity: 2
+  },
+  {
+    id: 'luma_wash',
+    name: 'Luma Wash',
+    tag: '',
+    desc: 'Applies a subtle brightness and contrast micro-adjustment to each frame. Alters the luminance signature independently per frame.',
+    intensity: 2
+  },
+  {
+    id: 'border_seal',
+    name: 'Border Seal',
+    tag: '',
+    desc: 'Adds a thin transparent-black border, altering output dimensions and disabling dimension-based fingerprinting.',
+    intensity: 2
+  },
+  {
+    id: 'frame_jitter',
+    name: 'Frame Jitter',
+    tag: '',
+    desc: 'Randomizes inter-frame delay values. Changes the temporal signature of the animation without modifying any pixel data.',
+    intensity: 1
+  },
+  {
+    id: 'hash_shatter',
+    name: 'Hash Shatter',
+    tag: 'MAX EVASION',
+    tagClass: 'tag-max',
+    desc: 'Full combination: chroma ghost + noise veil + palette drift + luma wash + border seal + frame timing jitter. Maximum transformation, minimal visual change.',
+    intensity: 5
+  }
+];
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  renderModes();
+  renderSettings('stealth_blend');
+}
+
+// ============================================================
+// UI: TABS
+// ============================================================
+function switchTab(tab) {
+  document.getElementById('pane-file').classList.toggle('hidden', tab !== 'file');
+  document.getElementById('pane-url').classList.toggle('hidden', tab !== 'url');
+  document.getElementById('tab-file').classList.toggle('active', tab === 'file');
+  document.getElementById('tab-url').classList.toggle('active', tab === 'url');
+}
+
+// ============================================================
+// UI: MODE CARDS
+// ============================================================
+function renderModes() {
+  const grid = document.getElementById('modes-grid');
+  grid.innerHTML = MODES.map(m => `
+    <div class="mode-card ${m.id === state.selectedMode ? 'selected' : ''}"
+         onclick="selectMode('${m.id}')" id="mode-card-${m.id}">
+      <div class="mode-card-header">
+        <span class="mode-name">${m.name}</span>
+        ${m.tag ? `<span class="mode-tag ${m.tagClass}">${m.tag}</span>` : ''}
+      </div>
+      <div class="mode-desc">${m.desc}</div>
+      <div class="mode-indicator">
+        ${Array.from({length:5},(_,i)=>`<div class="ind-dot ${i<m.intensity?'filled':''}"></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectMode(id) {
+  state.selectedMode = id;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('mode-card-'+id).classList.add('selected');
+  renderSettings(id);
+}
+
+// ============================================================
+// UI: SETTINGS
+// ============================================================
+const SETTING_DEFS = {
+  stealth_blend: [
+    { key:'intensity', label:'Blend Intensity', min:1, max:5, step:1 }
+  ],
+  chroma_ghost: [
+    { key:'offset', label:'Channel Offset (px)', min:1, max:4, step:1 }
+  ],
+  noise_veil: [
+    { key:'grain', label:'Grain Amount', min:4, max:30, step:1 }
+  ],
+  palette_drift: [
+    { key:'shift', label:'RGB Shift Value', min:1, max:12, step:1 }
+  ],
+  luma_wash: [
+    { key:'brightness', label:'Brightness Offset', min:-15, max:15, step:1 },
+    { key:'contrast', label:'Contrast Offset', min:-15, max:15, step:1 }
+  ],
+  border_seal: [
+    { key:'borderSize', label:'Border Width (px)', min:1, max:6, step:1 }
+  ],
+  frame_jitter: [
+    { key:'jitterAmount', label:'Jitter Range (ms)', min:5, max:40, step:5 }
+  ],
+  hash_shatter: []
+};
+
+function renderSettings(modeId) {
+  const defs = SETTING_DEFS[modeId] || [];
+  const container = document.getElementById('settings-content');
+  if (defs.length === 0) {
+    container.innerHTML = `<p style="color:var(--text-3);font-family:var(--font-mono);font-size:0.75rem">
+      No adjustable parameters — Hash Shatter uses optimal preset values for all transforms.
+    </p>`;
+    return;
+  }
+  container.innerHTML = `<div class="settings-grid">
+    ${defs.map(d => `
+      <div class="setting-item">
+        <label>
+          <span>${d.label}</span>
+          <span class="val" id="val-${d.key}">${modeSettings[modeId][d.key]}</span>
+        </label>
+        <input type="range" min="${d.min}" max="${d.max}" step="${d.step}"
+          value="${modeSettings[modeId][d.key]}"
+          oninput="updateSetting('${modeId}','${d.key}',this.value)">
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function updateSetting(modeId, key, value) {
+  modeSettings[modeId][key] = parseFloat(value);
+  const el = document.getElementById('val-'+key);
+  if (el) el.textContent = value;
+}
+
+// ============================================================
+// UI: FORMAT
+// ============================================================
+function selectFormat(fmt) {
+  state.exportFormat = fmt;
+  document.getElementById('fmt-gif').classList.toggle('selected', fmt === 'gif');
+  document.getElementById('fmt-mp4').classList.toggle('selected', fmt === 'mp4');
+}
+
+// ============================================================
+// FILE HANDLING
+// ============================================================
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  document.getElementById('upload-zone').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) loadFile(f);
+}
+function handleFileInput(e) {
+  const f = e.target.files[0];
+  if (f) loadFile(f);
+}
+
+function loadFile(file) {
+  if (!file.name.toLowerCase().endsWith('.gif')) {
+    showAlert('warn', 'Please select a .gif file.');
+    return;
+  }
+  state.sourceFilename = file.name.replace(/\.gif$/i, '');
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    state.sourceBuffer = e.target.result;
+    onSourceLoaded();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+async function loadFromURL() {
+  const url = document.getElementById('url-input').value.trim();
+  if (!url) return;
+  logKernel('info', `Fetching: ${url}`);
+  try {
+    let resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    state.sourceBuffer = await resp.arrayBuffer();
+    state.sourceFilename = url.split('/').pop().replace(/\.gif$/i,'') || 'output';
+    onSourceLoaded();
+  } catch(e) {
+    // try CORS proxy
+    try {
+      logKernel('warn', 'Direct fetch failed, trying CORS proxy...');
+      const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+      const resp2 = await fetch(proxy);
+      state.sourceBuffer = await resp2.arrayBuffer();
+      state.sourceFilename = 'output';
+      onSourceLoaded();
+    } catch(e2) {
+      showAlert('warn', 'Could not load URL. Download the GIF and use file upload.');
+    }
+  }
+}
+
+function onSourceLoaded() {
+  try {
+    state.decodedGIF = decodeGIF(state.sourceBuffer);
+    showSourceInfo();
+    showOriginalPreview();
+    document.getElementById('process-btn').disabled = false;
+    document.getElementById('process-status').textContent = `Ready — ${state.decodedGIF.frames.length} frames loaded`;
+  } catch(e) {
+    showAlert('warn', 'Failed to decode GIF: ' + e.message);
+    console.error(e);
+  }
+}
+
+// ============================================================
+// GIF DECODER (omggif)
+// ============================================================
+function decodeGIF(buffer) {
+  const reader = new omggif.GifReader(new Uint8Array(buffer));
+  const numFrames = reader.numFrames();
+  const width = reader.width;
+  const height = reader.height;
+  const frames = [];
+
+  // We accumulate into a single canvas to handle disposal properly
+  const accumCanvas = document.createElement('canvas');
+  accumCanvas.width = width;
+  accumCanvas.height = height;
+  const accumCtx = accumCanvas.getContext('2d');
+
+  // Persistent pixel buffer for decoding
+  const accumPixels = new Uint8ClampedArray(width * height * 4);
+
+  for (let i = 0; i < numFrames; i++) {
+    const info = reader.frameInfo(i);
+
+    // decodeAndBlitFrameRGBA blits frame onto accumPixels (handles partial frames)
+    reader.decodeAndBlitFrameRGBA(i, accumPixels);
+
+    // Snapshot current state
+    const imgData = new ImageData(new Uint8ClampedArray(accumPixels), width, height);
+
+    frames.push({
+      imageData: imgData,
+      delay: Math.max(20, (info.delay || 10) * 10), // centiseconds → ms, min 20ms
+      disposal: info.disposal,
+      x: info.x || 0,
+      y: info.y || 0,
+      fw: info.width || width,
+      fh: info.height || height
+    });
+  }
+
+  return { frames, width, height };
+}
+
+// ============================================================
+// PIXEL PROCESSING FUNCTIONS
+// ============================================================
+
+function clamp(v) { return Math.min(255, Math.max(0, v | 0)); }
+
+// Chroma channel shift: red shifts right, blue shifts left
+function applyChromaShift(imgData, amount) {
+  const src = imgData.data;
+  const w = imgData.width;
+  const h = imgData.height;
+  const dst = new Uint8ClampedArray(src.length);
+
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      // Green stays
+      dst[i+1] = src[i+1];
+      dst[i+3] = src[i+3];
+      // Red: shift right
+      const rx = Math.min(x + amount, w - 1);
+      dst[i]   = src[(y * w + rx) * 4];
+      // Blue: shift left
+      const bx = Math.max(x - amount, 0);
+      dst[i+2] = src[(y * w + bx) * 4 + 2];
+    }
+  }
+  imgData.data.set(dst);
+}
+
+// Grain noise overlay
+function applyNoise(imgData, intensity) {
+  const data = imgData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i+3] === 0) continue;
+    const n = (Math.random() - 0.5) * intensity * 2;
+    data[i]   = clamp(data[i]   + n);
+    data[i+1] = clamp(data[i+1] + n);
+    data[i+2] = clamp(data[i+2] + n);
+  }
+}
+
+// Uniform RGB shift
+function applyPaletteDrift(imgData, shift) {
+  const data = imgData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i+3] === 0) continue;
+    data[i]   = clamp(data[i]   + shift);
+    data[i+1] = clamp(data[i+1] + shift);
+    data[i+2] = clamp(data[i+2] + shift);
+  }
+}
+
+// Brightness/contrast
+function applyLumaWash(imgData, brightness, contrast) {
+  const data = imgData.data;
+  const factor = contrast !== 0
+    ? (259 * (contrast + 255)) / (255 * (259 - contrast))
+    : 1;
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i+3] === 0) continue;
+    data[i]   = clamp(factor * (data[i]   - 128) + 128 + brightness);
+    data[i+1] = clamp(factor * (data[i+1] - 128) + 128 + brightness);
+    data[i+2] = clamp(factor * (data[i+2] - 128) + 128 + brightness);
+  }
+}
+
+// Add border — returns new larger ImageData
+function applyBorderSeal(imgData, borderSize) {
+  const ow = imgData.width;
+  const oh = imgData.height;
+  const nw = ow + borderSize * 2;
+  const nh = oh + borderSize * 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = nw; canvas.height = nh;
+  const ctx = canvas.getContext('2d');
+  ctx.putImageData(imgData, borderSize, borderSize);
+  return { imgData: ctx.getImageData(0, 0, nw, nh), nw, nh };
+}
+
+// Frame delay jitter
+function applyFrameJitter(delay, amount) {
+  const jitter = (Math.random() * 2 - 1) * amount;
+  return Math.max(20, Math.round(delay + jitter));
+}
+
+// ============================================================
+// PROCESS A SINGLE FRAME
+// ============================================================
+function processFrame(frame, mode, settings, frameIdx) {
+  // Deep copy imageData
+  const src = frame.imageData;
+  const newImgData = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+  let nw = src.width, nh = src.height;
+  let delay = frame.delay;
+
+  switch (mode) {
+    case 'stealth_blend': {
+      const s = settings.stealth_blend;
+      const lvl = s.intensity;
+      applyChromaShift(newImgData, lvl > 2 ? 2 : 1);
+      applyNoise(newImgData, lvl * 3 + 2);
+      delay = applyFrameJitter(delay, lvl * 4);
+      if (lvl >= 4) applyPaletteDrift(newImgData, 1);
+      break;
+    }
+    case 'chroma_ghost': {
+      applyChromaShift(newImgData, settings.chroma_ghost.offset);
+      break;
+    }
+    case 'noise_veil': {
+      applyNoise(newImgData, settings.noise_veil.grain);
+      break;
+    }
+    case 'palette_drift': {
+      applyPaletteDrift(newImgData, settings.palette_drift.shift);
+      break;
+    }
+    case 'luma_wash': {
+      const s = settings.luma_wash;
+      applyLumaWash(newImgData, s.brightness, s.contrast);
+      break;
+    }
+    case 'border_seal': {
+      const bs = settings.border_seal.borderSize;
+      const res = applyBorderSeal(newImgData, bs);
+      return { imageData: res.imgData, delay, nw: res.nw, nh: res.nh };
+    }
+    case 'frame_jitter': {
+      delay = applyFrameJitter(delay, settings.frame_jitter.jitterAmount);
+      break;
+    }
+    case 'hash_shatter': {
+      applyChromaShift(newImgData, 2);
+      applyNoise(newImgData, 10);
+      applyPaletteDrift(newImgData, 3);
+      applyLumaWash(newImgData, 2, 5);
+      delay = applyFrameJitter(delay, 15);
+      const res2 = applyBorderSeal(newImgData, 2);
+      return { imageData: res2.imgData, delay, nw: res2.nw, nh: res2.nh };
+    }
+  }
+
+  return { imageData: newImgData, delay, nw, nh };
+}
+
+// ============================================================
+// MAIN PROCESS PIPELINE
+// ============================================================
+async function startProcessing() {
+  if (!state.decodedGIF || state.isProcessing) return;
+  state.isProcessing = true;
+
+  document.getElementById('process-btn').disabled = true;
+  document.getElementById('reprocess-btn').disabled = true;
+  document.getElementById('download-btn').disabled = true;
+  document.getElementById('progress-section').style.display = 'block';
+  document.getElementById('kernel-log').innerHTML = '';
+
+  const { frames, width, height } = state.decodedGIF;
+  const mode = state.selectedMode;
+  const modeName = MODES.find(m => m.id === mode)?.name || mode;
+  const totalFrames = frames.length;
+
+  logKernel('info', `Pipeline start — mode: ${modeName} — ${totalFrames} frames`);
+  logKernel('dim', `Source: ${width}x${height}px`);
+
+  // Step 1: Process frames
+  const processedFrames = [];
+  let outW = width, outH = height;
+
+  for (let i = 0; i < totalFrames; i++) {
+    updateProgress(i, totalFrames * 2, `Applying ${modeName} — frame ${i+1}/${totalFrames}`);
+    if (i % 10 === 0 || i === totalFrames - 1) {
+      logKernel('log', `  frame ${String(i+1).padStart(4,'0')} / ${totalFrames} — ${mode}`);
+    }
+    const result = processFrame(frames[i], mode, modeSettings, i);
+    processedFrames.push(result);
+    outW = result.nw;
+    outH = result.nh;
+    // Yield to browser every 5 frames
+    if (i % 5 === 0) await sleep(0);
+  }
+
+  logKernel('success', `Frame processing complete — ${totalFrames} frames`);
+  logKernel('dim', `Output dimensions: ${outW}x${outH}px`);
+
+  // Step 2: Encode
+  logKernel('info', `Encoding as ${state.exportFormat.toUpperCase()}...`);
+  updateProgress(totalFrames, totalFrames * 2, `Encoding ${state.exportFormat.toUpperCase()}...`);
+
+  try {
+    if (state.exportFormat === 'gif') {
+      await encodeGIF(processedFrames, outW, outH);
+    } else {
+      await encodeMP4(processedFrames, outW, outH);
+    }
+  } catch(e) {
+    logKernel('error', 'Encoding failed: ' + e.message);
+    console.error(e);
+    state.isProcessing = false;
+    document.getElementById('process-btn').disabled = false;
+    return;
+  }
+
+  updateProgress(totalFrames * 2, totalFrames * 2, 'Done');
+  logKernel('success', `Export ready — ${state.exportFormat.toUpperCase()} output generated`);
+
+  document.getElementById('download-btn').disabled = false;
+  document.getElementById('reprocess-btn').disabled = false;
+  document.getElementById('process-btn').disabled = false;
+  state.isProcessing = false;
+}
+
+// ============================================================
+// GIF ENCODER (gif.js)
+// ============================================================
+async function encodeGIF(frames, outW, outH) {
+  // Fetch worker as blob to avoid cross-origin worker restriction
+  let workerScript = GIF_WORKER_URL;
+  try {
+    const resp = await fetch(GIF_WORKER_URL);
+    const txt = await resp.text();
+    const blob = new Blob([txt], { type: 'application/javascript' });
+    workerScript = URL.createObjectURL(blob);
+    logKernel('dim', '  worker: blob (fast path)');
+  } catch(e) {
+    logKernel('warn', '  worker: remote CDN fallback');
+  }
+
+  return new Promise((resolve, reject) => {
+    const gif = new GIF({
+      workers: 2,
+      quality: 8,
+      width: outW,
+      height: outH,
+      workerScript,
+      repeat: 0
     });
 
-    function log(msg) {
-        const div = document.createElement('div');
-        div.innerText = `[${new Date().toLocaleTimeString()}] > ${msg}`;
-        kernelLog.prepend(div);
+    const total = frames.length;
+
+    for (let i = 0; i < total; i++) {
+      const canvas = document.createElement('canvas');
+      canvas.width = outW; canvas.height = outH;
+      const ctx = canvas.getContext('2d');
+      ctx.putImageData(frames[i].imageData, 0, 0);
+      gif.addFrame(canvas, { delay: frames[i].delay, copy: true });
     }
 
-    async function startBypass() {
-        log("Accessing file buffer...");
-        statusText.innerText = "Processing Kernel...";
-        
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                finalize();
-            }
-            updateProgress(progress);
-            runVisualBypass();
-        }, 300);
-    }
+    gif.on('progress', p => {
+      updateProgress(Math.round(p * total) + total, total * 2, `Quantizing frames — ${Math.round(p*100)}%`);
+    });
 
-    function updateProgress(val) {
-        progressFill.style.width = `${val}%`;
-        percentText.innerText = `${Math.floor(val)}%`;
-        if(val > 20) log(`Applying Frame Jittering...`);
-        if(val > 50) log(`Injecting Luminance Noise into Hex-data...`);
-        if(val > 80) log(`Rebuilding Hash-Table for TikTok Bypass...`);
-    }
+    gif.on('finished', (blob) => {
+      if (state.processedBlobURL) URL.revokeObjectURL(state.processedBlobURL);
+      state.processedBlob = blob;
+      state.processedBlobURL = URL.createObjectURL(blob);
+      showBypassedPreview(state.processedBlobURL, outW, outH, blob.size);
+      resolve();
+    });
 
-    function runVisualBypass() {
-        const canvas = document.getElementById('outputCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 400;
-        canvas.height = 225;
-        
-        // Simulate real-time bypassing visual
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0,0, canvas.width, canvas.height);
-        
-        for(let i=0; i<100; i++) {
-            ctx.fillStyle = `rgba(0, 122, 255, ${Math.random() * 0.5})`;
-            ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 2, 2);
-        }
-        ctx.strokeStyle = "#007aff";
-        ctx.strokeRect(10, 10, canvas.width-20, canvas.height-20);
-    }
+    gif.on('error', reject);
+    gif.render();
+  });
+}
 
-    function finalize() {
-        log("SUCCESS: Content Bypassed. Hash mismatch generated.");
-        statusText.innerText = "Process Completed";
-        document.getElementById('saveBtn').style.display = 'block';
-    }
+// ============================================================
+// MP4/WebM ENCODER (MediaRecorder)
+// ============================================================
+async function encodeMP4(frames, outW, outH) {
+  const canvas = document.createElement('canvas');
+  canvas.width = outW; canvas.height = outH;
+  const ctx = canvas.getContext('2d');
 
-    function saveFile() {
-        const format = document.getElementById('exportFormat').value;
-        alert(`Bypass Success! Your file is ready as ${format.toUpperCase()}. AI filter will not be able to detect the original signature.`);
-    }
+  const mimeTypes = [
+    'video/mp4;codecs=avc1',
+    'video/webm;codecs=vp9',
+    'video/webm;codecs=vp8',
+    'video/webm'
+  ];
+
+  let mimeType = mimeTypes.find(t => MediaRecorder.isTypeSupported(t));
+  if (!mimeType) throw new Error('No supported video MIME type found in this browser.');
+  logKernel('dim', `  codec: ${mimeType}`);
+
+  const stream = canvas.captureStream(0); // manual frame advance
+  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8_000_000 });
+  const chunks = [];
+
+  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+  return new Promise((resolve, reject) => {
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: mimeType });
+      if (state.processedBlobURL) URL.revokeObjectURL(state.processedBlobURL);
+      state.processedBlob = blob;
+      state.processedBlobURL = URL.createObjectURL(blob);
+      // For preview, show canvas snapshot
+      showBypassedPreview(state.processedBlobURL, outW, outH, blob.size, true);
+      resolve();
+    };
+
+    recorder.onerror = reject;
+    recorder.start();
+
+    (async () => {
+      const track = stream.getVideoTracks()[0];
+      for (let i = 0; i < frames.length; i++) {
+        ctx.putImageData(frames[i].imageData, 0, 0);
+        if (track.requestFrame) track.requestFrame();
+        updateProgress(i + frames.length, frames.length * 2, `Recording frame ${i+1}/${frames.length}`);
+        await sleep(frames[i].delay);
+      }
+      recorder.stop();
+    })();
+  });
+}
+
+// ============================================================
+// DOWNLOAD
+// ============================================================
+function downloadOutput() {
+  if (!state.processedBlobURL) return;
+  const ext = state.exportFormat === 'gif' ? '.gif' : '.webm';
+  const a = document.createElement('a');
+  a.href = state.processedBlobURL;
+  a.download = state.sourceFilename + '_bypass' + ext;
+  a.click();
+}
+
+// ============================================================
+// PREVIEW HELPERS
+// ============================================================
+function showSourceInfo() {
+  const { frames, width, height } = state.decodedGIF;
+  const totalDelay = frames.reduce((s, f) => s + f.delay, 0);
+  const fps = (frames.length / (totalDelay / 1000)).toFixed(1);
+  const sizeKB = (state.sourceBuffer.byteLength / 1024).toFixed(1);
+
+  document.getElementById('source-info').classList.remove('hidden');
+  document.getElementById('source-stats').innerHTML = `
+    <div class="stat-chip"><div class="stat-label">Size</div><div class="stat-val">${sizeKB} KB</div></div>
+    <div class="stat-chip"><div class="stat-label">Dimensions</div><div class="stat-val">${width}x${height}</div></div>
+    <div class="stat-chip"><div class="stat-label">Frames</div><div class="stat-val">${frames.length}</div></div>
+    <div class="stat-chip"><div class="stat-label">Avg FPS</div><div class="stat-val">${fps}</div></div>
+    <div class="stat-chip"><div class="stat-label">Duration</div><div class="stat-val">${(totalDelay/1000).toFixed(2)}s</div></div>
+  `;
+}
+
+function showOriginalPreview() {
+  const blob = new Blob([state.sourceBuffer], { type: 'image/gif' });
+  const url = URL.createObjectURL(blob);
+  const { width, height } = state.decodedGIF;
+  const sizeKB = (state.sourceBuffer.byteLength / 1024).toFixed(1);
+
+  document.getElementById('orig-meta').textContent = `${width}x${height} — ${sizeKB}KB`;
+  const wrap = document.getElementById('orig-preview-wrap');
+  wrap.innerHTML = `<img src="${url}" alt="Original GIF">`;
+}
+
+function showBypassedPreview(url, w, h, size, isVideo) {
+  const sizeKB = (size / 1024).toFixed(1);
+  document.getElementById('byp-meta').textContent = `${w}x${h} — ${sizeKB}KB`;
+  const wrap = document.getElementById('byp-preview-wrap');
+  if (isVideo) {
+    wrap.innerHTML = `<video src="${url}" autoplay loop muted playsinline style="max-width:100%;max-height:320px;border-radius:6px"></video>`;
+  } else {
+    wrap.innerHTML = `<img src="${url}" alt="Bypassed GIF">`;
+  }
+}
+
+// ============================================================
+// PROGRESS
+// ============================================================
+function updateProgress(current, total, label) {
+  const pct = total > 0 ? Math.min(100, Math.round((current / total) * 100)) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-step').textContent = label;
+}
+
+function logKernel(type, msg) {
+  const log = document.getElementById('kernel-log');
+  const ts = new Date().toLocaleTimeString('en-US', { hour12: false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  const div = document.createElement('div');
+  div.className = `log-line ${type}`;
+  const prefix = {
+    info: '>> ', success: '++ ', warn: '!! ', error: 'XX ',
+    log: '   ', dim: '   '
+  }[type] || '   ';
+  div.textContent = `[${ts}] ${prefix}${msg}`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function showAlert(type, msg) {
+  const container = document.getElementById('app');
+  const div = document.createElement('div');
+  div.className = `alert alert-${type}`;
+  div.textContent = msg;
+  div.style.position = 'fixed';
+  div.style.bottom = '24px';
+  div.style.right = '24px';
+  div.style.zIndex = '9999';
+  div.style.maxWidth = '380px';
+  container.appendChild(div);
+  setTimeout(() => div.remove(), 5000);
+}
+
+// ============================================================
+// BOOTSTRAP
+// ============================================================
+document.addEventListener('DOMContentLoaded', init);
 </script>
-
 </body>
 </html>
