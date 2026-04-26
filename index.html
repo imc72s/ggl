@@ -260,13 +260,8 @@ p { line-height: 1.6; color: var(--text-2); font-size: 0.875rem; }
   box-shadow: inset 0 0 30px rgba(26,110,255,0.06);
 }
 
-.upload-zone input[type=file] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
+#file-input {
+  display: none;
 }
 
 .upload-icon {
@@ -850,8 +845,10 @@ input[type=range]::-moz-range-thumb {
 
     <!-- File Upload -->
     <div id="pane-file">
-      <div class="upload-zone" id="upload-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-        <input type="file" accept=".gif,image/gif" onchange="handleFileInput(event)" id="file-input">
+      <input type="file" id="file-input" accept=".gif,image/gif" onchange="handleFileInput(event)">
+      <div class="upload-zone" id="upload-zone"
+           onclick="document.getElementById('file-input').click()"
+           ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
         <svg class="upload-icon" viewBox="0 0 48 48" fill="none">
           <rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" stroke-width="2" fill="none" opacity="0.5"/>
           <path d="M24 26V18M24 18L20 22M24 18L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -859,8 +856,8 @@ input[type=range]::-moz-range-thumb {
         </svg>
         <p style="color:var(--text-2);font-size:0.85rem;font-weight:600;">Drop GIF here or click to browse</p>
         <p class="hint">Supports animated GIF — max recommended size 30MB</p>
-      </div>
-    </div>
+      </div><!-- /.upload-zone -->
+    </div><!-- /#pane-file -->
 
     <!-- URL Input -->
     <div id="pane-url" class="hidden">
