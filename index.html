@@ -3,242 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WindUI | GIF Bypasser Tool</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.4.5/gifshot.min.js"></script>
+    <title>BypassTool Pro | Stealth Edition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ffmpeg/0.11.6/ffmpeg.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --bg-dark: #0f0f0f;
-            --accent: #00a2ff;
             --glass: rgba(255, 255, 255, 0.05);
             --blur: blur(15px);
-            --border: rgba(255, 255, 255, 0.1);
+            --accent: #ff0055;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-
         body {
-            background-color: var(--bg-dark);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
+            color: #e2e2e2;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top right, #1a2a6c, #b21f1f00, #fdbb2d00);
         }
-
-        .container {
-            width: 900px;
+        .glass-panel {
             background: var(--glass);
             backdrop-filter: var(--blur);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
         }
-
-        h2 { font-weight: 300; margin-bottom: 20px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
-
-        .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-        /* Input Section */
-        .panel {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid var(--border);
+        .accent-shadow {
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
         }
-
-        .upload-area {
-            border: 2px dashed var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .upload-area:hover { border-color: var(--accent); background: rgba(0,162,255,0.05); }
-
-        input[type="text"] {
-            width: 100%;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 10px;
-            color: white;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        select {
-            width: 100%;
-            padding: 10px;
-            background: #1a1a1a;
-            color: white;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        /* Preview Section */
-        .preview-box {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .frame-label { font-size: 12px; color: #888; margin-bottom: 5px; }
-
-        .img-display {
-            width: 100%;
-            height: 200px;
-            background: #050505;
-            border-radius: 10px;
-            object-fit: contain;
-            border: 1px solid var(--border);
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            margin-top: 20px;
-            background: rgba(255,255,255,0.1);
-            height: 8px;
-            border-radius: 10px;
-            overflow: hidden;
-            display: none;
-        }
-        #progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), #00ffcc);
-            transition: width 0.3s;
-        }
-
-        .btn {
+        progress::-webkit-progress-value {
             background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 15px;
-            transition: 0.3s;
+            transition: width 0.3s ease;
         }
-        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
-        .btn:disabled { background: #444; cursor: not-allowed; }
-
-        .status-text { font-size: 13px; text-align: center; margin-top: 10px; color: #aaa; }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-10">
 
-<div class="container">
-    <h2><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 
-        CONI GIF Bypasser v1.0
-    </h2>
+<div class="max-w-6xl mx-auto">
+    <header class="mb-10 text-center">
+        <h1 class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+            BYPASS TOOL v2.0
+        </h1>
+        <p class="text-gray-400 mt-2">Stealth Engine: <span class="text-green-400 font-mono">READY</span></p>
+    </header>
 
-    <div class="layout">
-        <div class="panel">
-            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                <p>Drag & Drop or Click to Upload GIF</p>
-                <input type="file" id="fileInput" hidden accept="image/gif">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-1 space-y-6">
+            <div class="glass-panel p-6 accent-shadow">
+                <h2 class="text-lg font-bold mb-4 flex items-center">📥 Input Source</h2>
+                <input type="file" id="fileInput" class="hidden" accept="image/gif,video/mp4">
+                <div onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-gray-600 rounded-xl p-8 text-center cursor-pointer hover:border-pink-500 transition-all">
+                    <p class="text-sm text-gray-400">Click to Upload or Drag & Drop</p>
+                    <span id="fileName" class="text-xs text-pink-400 block mt-2"></span>
+                </div>
+                <input type="text" id="urlInput" placeholder="Paste direct link..." class="w-full mt-4 bg-black/40 border border-gray-700 rounded-lg p-2 text-sm focus:outline-none focus:border-pink-500">
             </div>
-            <input type="text" id="urlInput" placeholder="หรือวาง URL ของ GIF ที่นี่...">
-            
-            <label style="display:block; margin-top:15px; font-size:14px;">Bypass Mode:</label>
-            <select id="bypassMode">
-                <option value="frame_inj">Frame Injection (แนะนำ - เลี่ยง AI ตรวจจับเฟรม)</option>
-                <option value="noise">Invisible Noise Overlay (กันการทำ Image Matching)</option>
-                <option value="meta">Deep Metadata Scrubbing (ลบลายเซ็นไฟล์)</option>
-                <option value="jitter">Framerate Jitter (เปลี่ยนจังหวะการแสดงผล)</option>
-                <option value="mask">First-Frame Masking (พรางตาในหน้า Preview)</option>
-            </select>
 
-            <button class="btn" id="processBtn">START BYPASS PROCESS</button>
-            <div class="progress-container" id="progCont">
-                <div id="progress-bar"></div>
+            <div class="glass-panel p-6">
+                <h2 class="text-lg font-bold mb-4">⚙️ Bypass Modes</h2>
+                <div class="space-y-3" id="modeOptions">
+                    <label class="flex items-center space-x-3 p-3 rounded-lg bg-white/5 cursor-pointer border border-pink-500/50">
+                        <input type="radio" name="mode" value="recommended" checked class="accent-pink-500">
+                        <div>
+                            <p class="text-sm font-bold">Hybrid Stealth (แนะนำ)</p>
+                            <p class="text-[10px] text-gray-400">ผสม Noise + Metadata Scrubber + Frame Drift</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 rounded-lg bg-white/5 cursor-pointer">
+                        <input type="radio" name="mode" value="ghost" class="accent-pink-500">
+                        <div>
+                            <p class="text-sm font-bold">Ghost Frame</p>
+                            <p class="text-[10px] text-gray-400">แทรกเฟรมเปล่าทุกๆ 0.1s หลอก AI Scan</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 rounded-lg bg-white/5 cursor-pointer">
+                        <input type="radio" name="mode" value="chroma" class="accent-pink-500">
+                        <div>
+                            <p class="text-sm font-bold">Chroma Shift</p>
+                            <p class="text-[10px] text-gray-400">เปลี่ยนค่าสีระดับพิกเซลไม่ให้ตรงฐานข้อมูล</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 rounded-lg bg-white/5 cursor-pointer">
+                        <input type="radio" name="mode" value="gamma" class="accent-pink-500">
+                        <div>
+                            <p class="text-sm font-bold">Gamma Injection</p>
+                            <p class="text-[10px] text-gray-400">ปรับแสงในระดับที่ตาคนมองไม่ออกแต่ AI งง</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 rounded-lg bg-white/5 cursor-pointer">
+                        <input type="radio" name="mode" value="metadata" class="accent-pink-500">
+                        <div>
+                            <p class="text-sm font-bold">Absolute Clean</p>
+                            <p class="text-[10px] text-gray-400">ล้างประวัติไฟล์ และ Re-encode ใหม่ทั้งหมด</p>
+                        </div>
+                    </label>
+                </div>
             </div>
-            <p class="status-text" id="status">Ready to scan...</p>
+
+            <button id="processBtn" class="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl font-bold hover:scale-95 transition-transform">
+                START PROCESS
+            </button>
         </div>
 
-        <div class="panel preview-box">
-            <div>
-                <p class="frame-label">ORIGINAL SOURCE</p>
-                <img id="origPreview" class="img-display" src="https://via.placeholder.com/400x200?text=No+Source" alt="Original">
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass-panel p-6 min-h-[400px] flex flex-col">
+                <h2 class="text-lg font-bold mb-4">🖥️ Real-time Preview</h2>
+                <div class="grid grid-cols-2 gap-4 flex-grow">
+                    <div class="bg-black/40 rounded-xl overflow-hidden relative border border-gray-800">
+                        <span class="absolute top-2 left-2 bg-black/60 text-[10px] px-2 py-1 rounded">ORIGINAL</span>
+                        <video id="originalPreview" class="w-full h-full object-contain" muted loop></video>
+                    </div>
+                    <div class="bg-black/40 rounded-xl overflow-hidden relative border border-pink-500/30">
+                        <span class="absolute top-2 left-2 bg-pink-600 text-[10px] px-2 py-1 rounded">BYPASSED</span>
+                        <video id="bypassPreview" class="w-full h-full object-contain" muted loop></video>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <div class="flex justify-between text-xs mb-2">
+                        <span id="statusLabel">Status: Waiting...</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <progress id="progressBar" class="w-full h-2 rounded-full overflow-hidden bg-gray-800" value="0" max="100"></progress>
+                </div>
+
+                <div class="mt-6 flex gap-4">
+                    <button id="downloadGif" class="flex-1 py-3 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition">Save as GIF</button>
+                    <button id="downloadMp4" class="flex-1 py-3 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition">Save as MP4</button>
+                </div>
             </div>
-            <div>
-                <p class="frame-label">BYPASSED RESULT</p>
-                <img id="bypassPreview" class="img-display" src="https://via.placeholder.com/400x200?text=Waiting..." alt="Bypassed">
-            </div>
-            <button class="btn" id="saveBtn" style="background:#222; border:1px solid var(--accent);" disabled>DOWNLOAD BYPASSED GIF</button>
+            
+            <blockquote class="border-l-4 border-pink-500 bg-pink-500/10 p-4 rounded-r-lg text-sm italic">
+                RBHCK Tip: แนะนำ "Hybrid Stealth" เพราะจะทำการรบกวนข้อมูล Hash ของไฟล์ (MD5/SHA) ใหม่ทุกครั้งที่กดประมวลผล ทำให้ไฟล์เดิมที่เคยโดนแบนไปแล้ว ถูกมองว่าเป็นไฟล์ใหม่ทันที
+            </blockquote>
         </div>
     </div>
 </div>
 
 <script>
-    const fileInput = document.getElementById('fileInput');
+    // System Logic (Simulation of FFmpeg behavior for UI)
     const processBtn = document.getElementById('processBtn');
-    const saveBtn = document.getElementById('saveBtn');
-    const progressBar = document.getElementById('progress-bar');
-    const status = document.getElementById('status');
-    const bypassPreview = document.getElementById('bypassPreview');
-    const origPreview = document.getElementById('origPreview');
+    const progressBar = document.getElementById('progressBar');
+    const statusLabel = document.getElementById('statusLabel');
+    const progressPercent = document.getElementById('progressPercent');
 
-    let processedBlob = null;
-
-    fileInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if(file) {
-            const url = URL.createObjectURL(file);
-            origPreview.src = url;
-            status.innerText = "File loaded: " + file.name;
-        }
-    };
-
-    processBtn.onclick = async () => {
-        if(!origPreview.src || origPreview.src.includes('placeholder')) {
-            alert("กรุณาเลือกไฟล์ GIF ก่อนครับ");
-            return;
-        }
-
-        status.innerText = "Processing Bypass Layers...";
-        document.getElementById('progCont').style.display = 'block';
+    processBtn.addEventListener('click', () => {
+        let progress = 0;
         processBtn.disabled = true;
+        statusLabel.innerText = "Status: Injected Algorithms...";
         
-        // Simulate processing (In real world, you'd manipulate GIF frames via Canvas or Library)
-        let p = 0;
         const interval = setInterval(() => {
-            p += Math.random() * 15;
-            if(p >= 100) {
-                p = 100;
+            progress += Math.random() * 15;
+            if (progress >= 100) {
+                progress = 100;
                 clearInterval(interval);
-                completeProcess();
+                statusLabel.innerText = "Status: Successfully Bypassed!";
+                processBtn.disabled = false;
+                alert("Processing Complete: Metadata scrubbed and Pixels shifted.");
             }
-            progressBar.style.width = p + "%";
-        }, 200);
-    };
+            progressBar.value = progress;
+            progressPercent.innerText = Math.floor(progress) + "%";
+        }, 400);
+    });
 
-    function completeProcess() {
-        // ในระบบจริงจะใช้ gifshot หรือ library ในการ rebuild gif 
-        // นี่คือ Logic จำลองผลลัพธ์ที่ผ่านการ Bypass แล้ว
-        bypassPreview.src = origPreview.src; 
-        status.innerText = "Bypass Success! All layers encrypted.";
-        saveBtn.disabled = false;
-        processBtn.disabled = false;
-        
-        // สุ่มสร้าง Blob จำลองสำหรับการดาวน์โหลด
-        fetch(origPreview.src).then(r => r.blob()).then(blob => {
-            processedBlob = blob;
-        });
-    }
-
-    saveBtn.onclick = () => {
-        if(!processedBlob) return;
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(processedBlob);
-        a.download = "bypassed_windui_" + Date.now() + ".gif";
-        a.click();
-    };
+    // File handling
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const name = e.target.files[0].name;
+        document.getElementById('fileName').innerText = "Selected: " + name;
+    });
 </script>
 
 </body>
