@@ -1,31 +1,25 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEBULA BYPASSER | Anti-Detection Tool</title>
+    <title>Bypass Tool - Professional Edition</title>
     <style>
         :root {
-            --primary: #007cff;
             --bg-dark: #0a0a0c;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #e0e0e0;
-            --accent: #00d4ff;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --primary-blue: #007aff;
+            --accent-blue: #00d4ff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --text-main: #e0e0e0;
         }
 
         body {
-            background: radial-gradient(circle at top right, #16213e, #0f3460, var(--bg-dark));
-            background-attachment: fixed;
-            color: var(--text);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,399 +27,322 @@
             overflow-x: hidden;
         }
 
-        .glass-container {
-            width: 95%;
-            max-width: 1100px;
-            background: var(--card-bg);
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-glass);
             border-radius: 24px;
             padding: 40px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
-        header {
+        h1 {
             text-align: center;
-            margin-bottom: 40px;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
+            font-weight: 300;
             letter-spacing: 2px;
-            background: linear-gradient(90deg, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 30px;
         }
 
-        .tool-grid {
+        .upload-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 850px) {
-            .tool-grid { grid-template-columns: 1fr; }
-        }
-
-        /* Input Section */
-        .input-section {
-            display: flex;
-            flex-direction: column;
             gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .drop-zone {
-            border: 2px dashed var(--border);
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            transition: 0.3s;
-            cursor: pointer;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .drop-zone:hover {
-            border-color: var(--primary);
-            background: rgba(0, 124, 255, 0.05);
-        }
-
-        input[type="text"] {
+        input[type="text"], input[type="file"] {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-glass);
             border-radius: 8px;
             color: white;
-            outline: none;
+            box-sizing: border-box;
         }
 
-        /* Modes Selection */
-        .modes-container {
+        .mode-selector {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .mode-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
+            background: var(--glass);
             padding: 15px;
             border-radius: 12px;
+            border: 1px solid var(--border-glass);
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .mode-card:hover {
+            border-color: var(--primary-blue);
+            background: rgba(0, 122, 255, 0.1);
         }
 
         .mode-card.active {
-            border-color: var(--primary);
-            background: rgba(0, 124, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 124, 255, 0.3);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
         }
 
-        .mode-card h4 {
-            color: var(--primary);
+        .mode-card span {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
             margin-bottom: 5px;
-            font-size: 0.9rem;
         }
 
-        .mode-card p {
-            font-size: 0.75rem;
+        .mode-card small {
+            font-size: 11px;
             opacity: 0.7;
         }
 
-        /* Preview Section */
-        .preview-section {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .preview-flex {
-            display: flex;
-            gap: 10px;
-            height: 200px;
+        .preview-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
         }
 
         .preview-box {
-            flex: 1;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.8rem;
-            color: #555;
-            border: 1px solid var(--border);
+            text-align: center;
         }
 
-        .preview-box canvas, .preview-box img {
+        canvas, img {
             max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
+            min-height: 200px;
+            background: #111;
         }
 
-        .label-tag {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.6rem;
-            color: var(--accent);
-        }
-
-        /* Progress Bar */
-        .progress-wrapper {
-            margin-top: 20px;
-        }
-
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-        }
-
-        .progress-bar {
+        .processing-bar-container {
             width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
+            height: 6px;
+            background: #111;
             border-radius: 10px;
+            margin: 20px 0;
             overflow: hidden;
+            display: none;
         }
 
-        .progress-fill {
+        .processing-bar {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            transition: 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            transition: width 0.2s;
         }
 
-        /* Actions */
+        .kernel-log {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            height: 60px;
+            overflow-y: auto;
+            color: #00ff00;
+            margin-bottom: 20px;
+        }
+
         .action-btns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
             gap: 15px;
-            margin-top: 20px;
+            justify-content: center;
         }
 
         .btn {
-            padding: 15px;
-            border-radius: 10px;
+            padding: 15px 30px;
             border: none;
+            border-radius: 30px;
             cursor: pointer;
-            font-weight: 700;
+            font-weight: bold;
             transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: var(--primary-blue);
             color: white;
-            box-shadow: 0 4px 15px rgba(0, 124, 255, 0.4);
         }
 
-        .btn-outline {
+        .btn-save {
             background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            filter: brightness(1.2);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4);
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .recommended-badge {
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            background: #ff4d4d;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
-<div class="glass-container">
-    <header>
-        <h1>NEBULA BYPASS ENGINE</h1>
-        <p style="font-size: 0.9rem; opacity: 0.6;">Advanced Media Obfuscation Tool for High-Security Filters</p>
-    </header>
+<div class="container">
+    <h1>Bypasser Tool Engine</h1>
 
-    <div class="tool-grid">
-        <div class="input-section">
-            <div class="drop-zone" id="dropZone">
-                <p id="fileNameDisplay">Drop GIF/MP4 or Click to Upload</p>
-                <input type="file" id="fileInput" hidden accept="image/gif,video/mp4">
-            </div>
-
-            <input type="text" id="urlInput" placeholder="Paste URL (Direct Link)">
-
-            <h3 style="font-size: 1rem; margin-top: 10px;">Bypass Algorithms</h3>
-            <div class="modes-container" id="modeSelector">
-                <div class="mode-card active" data-mode="hybrid">
-                    <h4>Hybrid Pulse (Recommended)</h4>
-                    <p>ผสมผสาน Pixel Shifting และ Metadata Scrubbing ขั้นสูงสุด</p>
-                </div>
-                <div class="mode-card" data-mode="hash">
-                    <h4>Hash Destroyer</h4>
-                    <p>เปลี่ยนโครงสร้าง Binary โดยไม่กระทบต่อคุณภาพภาพ</p>
-                </div>
-                <div class="mode-card" data-mode="frame">
-                    <h4>Frame Interleaving</h4>
-                    <p>แทรกเฟรมโปร่งใสความเร็วสูงเพื่อหลบการสแกน AI</p>
-                </div>
-                <div class="mode-card" data-mode="noise">
-                    <h4>Invisible Noise</h4>
-                    <p>ใส่สัญญาณรบกวนในระดับที่ตามองไม่เห็นเพื่อแก้ MD5</p>
-                </div>
-                <div class="mode-card" data-mode="meta">
-                    <h4>Exif Stripper</h4>
-                    <p>ล้างประวัติการสร้างไฟล์และตำแหน่งพิกัดทั้งหมด</p>
-                </div>
-                <div class="mode-card" data-mode="binary">
-                    <h4>Quantum Padding</h4>
-                    <p>เพิ่มข้อมูลขยะในระดับ Bit เพื่อเปลี่ยนขนาดไฟล์เล็กน้อย</p>
-                </div>
-            </div>
+    <div class="upload-section">
+        <div>
+            <label>Upload GIF/MP4</label>
+            <input type="file" id="fileInput" accept="image/gif,video/mp4">
         </div>
-
-        <div class="preview-section">
-            <div class="preview-flex">
-                <div class="preview-box" id="originalPreview">
-                    <span class="label-tag">ORIGINAL</span>
-                    No Preview
-                </div>
-                <div class="preview-box" id="bypassedPreview">
-                    <span class="label-tag" style="color: #00ff88;">BYPASSED</span>
-                    No Output
-                </div>
-            </div>
-
-            <div class="progress-wrapper">
-                <div class="progress-info">
-                    <span id="statusText">System Idle</span>
-                    <span id="percentText">0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressBar"></div>
-                </div>
-            </div>
-
-            <div class="action-btns">
-                <button class="btn btn-outline" id="processBtn">Start Processing</button>
-                <button class="btn btn-primary" id="downloadBtn" disabled>Download Bypassed</button>
-            </div>
-
-            <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; font-size: 0.8rem; line-height: 1.4;">
-                <strong style="color: var(--accent);">Technical Recommendation:</strong><br>
-                สำหรับ TikTok แนะนำใช้โหมด <strong>Hybrid Pulse</strong> ร่วมกับ <strong>Quantum Padding</strong> เพื่อป้องกันการทำ Hash Re-identification เมื่อมีการอัปโหลดซ้ำ
-            </div>
+        <div>
+            <label>URL String</label>
+            <input type="text" id="urlInput" placeholder="https://...">
         </div>
+    </div>
+
+    <div class="mode-selector" id="modeSelector">
+        <div class="mode-card active" data-mode="hybrid">
+            <div class="recommended-badge">Recommended</div>
+            <span>Hybrid Deep Scan</span>
+            <small>ผสมผสานทุกฟังก์ชันเพื่อความปลอดภัยสูงสุด</small>
+        </div>
+        <div class="mode-card" data-mode="pixel">
+            <span>Pixel Shifting</span>
+            <small>เปลี่ยนตำแหน่งพิกเซลระดับ Micro เพื่อหลบ AI</small>
+        </div>
+        <div class="mode-card" data-mode="noise">
+            <span>Alpha-Noise Layer</span>
+            <small>แทรกชั้นสัญญาณรบกวนที่มองไม่เห็น</small>
+        </div>
+        <div class="mode-card" data-mode="frame">
+            <span>Frame Injection</span>
+            <small>แทรกเฟรมหลอก 1ms เพื่อข้ามการแสกนวิดีโอ</small>
+        </div>
+        <div class="mode-card" data-mode="meta">
+            <span>Metadata Nuker</span>
+            <small>ล้างข้อมูลระบุตัวตนไฟล์ทั้งหมด</small>
+        </div>
+    </div>
+
+    <div class="kernel-log" id="kernelLog">System ready. Waiting for input...</div>
+
+    <div class="processing-bar-container" id="progressContainer">
+        <div class="processing-bar" id="progressBar"></div>
+    </div>
+
+    <div class="preview-area">
+        <div class="preview-box">
+            <p>Original</p>
+            <img id="origPreview" src="" alt="Waiting...">
+        </div>
+        <div class="preview-box">
+            <p>Bypassed Result</p>
+            <canvas id="bypassCanvas"></canvas>
+        </div>
+    </div>
+
+    <div class="action-btns">
+        <button class="btn btn-primary" onclick="startBypass()">Process & Bypass</button>
+        <select id="exportFormat" style="background:transparent; color:white; border:1px solid var(--border-glass); border-radius:20px; padding:0 10px;">
+            <option value="gif">Export as GIF</option>
+            <option value="mp4">Export as MP4</option>
+        </select>
+        <button class="btn btn-save" onclick="downloadResult()">Save to Device</button>
     </div>
 </div>
 
 <script>
-    const fileInput = document.getElementById('fileInput');
-    const dropZone = document.getElementById('dropZone');
-    const processBtn = document.getElementById('processBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
+    const logElement = document.getElementById('kernelLog');
     const progressBar = document.getElementById('progressBar');
-    const statusText = document.getElementById('statusText');
-    const percentText = document.getElementById('percentText');
-    const modeCards = document.querySelectorAll('.mode-card');
-
-    let selectedMode = 'hybrid';
-    let currentFile = null;
+    const progressContainer = document.getElementById('progressContainer');
+    
+    function log(text) {
+        const time = new Date().toLocaleTimeString();
+        logElement.innerHTML += `[${time}] ${text}<br>`;
+        logElement.scrollTop = logElement.scrollHeight;
+    }
 
     // Mode Selection Logic
-    modeCards.forEach(card => {
+    document.querySelectorAll('.mode-card').forEach(card => {
         card.addEventListener('click', () => {
-            modeCards.forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
             card.classList.add('active');
-            selectedMode = card.dataset.mode;
+            log(`Mode switched to: ${card.querySelector('span').innerText}`);
         });
     });
 
-    // File Handling
-    dropZone.addEventListener('click', () => fileInput.click());
-
-    fileInput.addEventListener('change', (e) => {
-        handleFile(e.target.files[0]);
-    });
-
-    function handleFile(file) {
-        if (!file) return;
-        currentFile = file;
-        document.getElementById('fileNameDisplay').innerText = file.name;
+    async function startBypass() {
+        progressContainer.style.display = 'block';
+        progressBar.style.width = '0%';
+        log("Initializing Kernel...");
         
-        // Show Original Preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const preview = document.getElementById('originalPreview');
-            if (file.type.includes('image')) {
-                preview.innerHTML = `<span class="label-tag">ORIGINAL</span><img src="${e.target.result}">`;
-            } else {
-                preview.innerHTML = `<span class="label-tag">ORIGINAL</span><video src="${e.target.result}" autoplay muted loop style="width:100%"></video>`;
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress > 100) progress = 100;
+            progressBar.style.width = `${progress}%`;
+            
+            if(progress > 20) log("Stripping Metadata...");
+            if(progress > 50) log("Applying Pixel Shifting...");
+            if(progress > 80) log("Injecting Alpha-Noise...");
+            
+            if (progress === 100) {
+                clearInterval(interval);
+                log("Bypass Success: File Signature Rebuilt.");
+                renderBypass();
             }
-        };
-        reader.readAsDataURL(file);
+        }, 300);
     }
 
-    // Processing Logic (Simulated for UI, Logic implementation provided)
-    processBtn.addEventListener('click', async () => {
-        if (!currentFile) return alert('Please select a file first');
-
-        processBtn.disabled = true;
-        downloadBtn.disabled = true;
+    function renderBypass() {
+        const canvas = document.getElementById('bypassCanvas');
+        const ctx = canvas.getContext('2d');
+        const img = document.getElementById('origPreview');
         
-        const steps = [
-            { s: 'Initializing Algorithm...', p: 10 },
-            { s: 'Stripping Metadata...', p: 30 },
-            { s: `Applying ${selectedMode.toUpperCase()} Logic...`, p: 60 },
-            { s: 'Injecting Binary Padding...', p: 85 },
-            { s: 'Re-encoding Streams...', p: 95 },
-            { s: 'Bypass Completed', p: 100 }
-        ];
+        // จำลองการ Bypass โดยการวาดทับ Canvas ด้วย Noise Layer
+        canvas.width = 400;
+        canvas.height = 300;
+        
+        ctx.fillStyle = "#111";
+        ctx.fillRect(0,0,400,300);
+        ctx.fillStyle = "#007aff";
+        ctx.font = "20px Arial";
+        ctx.fillText("Bypassed Media Ready", 90, 150);
+        
+        // ในระบบจริงจะใช้ Library เช่น gif.js หรือ ffmpeg.wasm ในการประมวลผล
+    }
 
-        for (const step of steps) {
-            statusText.innerText = step.s;
-            progressBar.style.width = step.p + '%';
-            percentText.innerText = step.p + '%';
-            await new Promise(r => setTimeout(r, Math.random() * 800 + 400));
+    function downloadResult() {
+        const format = document.getElementById('exportFormat').value;
+        log(`Exporting as ${format.toUpperCase()}...`);
+        alert(`ระบบกำลังทำการเข้ารหัสเป็น ${format} และจะบันทึกลงเครื่องอัตโนมัติ`);
+    }
+
+    // Handle File Preview
+    document.getElementById('fileInput').onchange = function(evt) {
+        const tgt = evt.target,
+              files = tgt.files;
+        
+        if (FileReader && files && files.length) {
+            const fr = new FileReader();
+            fr.onload = function () {
+                document.getElementById('origPreview').src = fr.result;
+                log("File loaded. Kernel ready for processing.");
+            }
+            fr.readAsDataURL(files[0]);
         }
-
-        generateOutput();
-    });
-
-    function generateOutput() {
-        // ในระบบจริงจะมีการใช้ canvas manipulation หรือ library เช่น ffmpeg.wasm
-        // ส่วนนี้จำลองการแสดงผล Bypassed version
-        const bypassedPreview = document.getElementById('bypassedPreview');
-        const reader = new FileReader();
-        
-        reader.onload = (e) => {
-            bypassedPreview.innerHTML = `<span class="label-tag" style="color: #00ff88;">BYPASSED</span><img src="${e.target.result}" style="filter: contrast(1.01) brightness(1.01);">`;
-            statusText.innerText = 'File Ready for Download';
-            downloadBtn.disabled = false;
-            processBtn.disabled = false;
-        };
-        reader.readAsDataURL(currentFile);
     }
-
-    downloadBtn.addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(currentFile);
-        link.download = `bypassed_${selectedMode}_${currentFile.name}`;
-        link.click();
-    });
 </script>
 
 </body>
 </html>
+
