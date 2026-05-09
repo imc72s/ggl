@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>GPU Overclock Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -19,46 +19,42 @@
             background-color: var(--bg-dark);
             color: white;
             font-family: 'Orbitron', sans-serif;
-            overflow: hidden;
             margin: 0;
-            height: 100vh;
+            /* ปรับให้รองรับความสูงหน้าจอที่ต่างกัน */
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
             user-select: none;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .glass-card {
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 1.5rem;
+            border-radius: 1.25rem;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
-        /* Circular Progress Animation */
+        /* Circular Progress Responsive */
+        .ring-container {
+            width: clamp(80px, 25vw, 110px);
+            height: clamp(80px, 25vw, 110px);
+        }
+
         .progress-ring__circle {
             transition: stroke-dashoffset 0.35s;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
 
-        /* Glitch Effect */
-        .glitch {
-            text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
-                         0.025em 0.04em 0 #fffc00;
-            animation: glitch 725ms infinite;
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff; }
-            15% { text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff; }
-            16% { text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff; }
-            /* ... etc */
-        }
-
         .kernel-log {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #70eeff;
-            opacity: 1;
+            word-break: break-all;
         }
 
         /* Glowing Switch */
@@ -72,92 +68,100 @@
             pointer-events: none;
             opacity: 0.5;
         }
+
+        /* สำหรับหน้าจอที่มี Notch */
+        .container-safe {
+            padding-top: env(safe-area-inset-top, 1.5rem);
+            padding-bottom: env(safe-area-inset-bottom, 1.5rem);
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+        }
     </style>
 </head>
-<body>
+<body class="container-safe">
 
-    <div class="p-6 h-full flex flex-col gap-6">
+    <div class="flex flex-col gap-4 h-full max-w-md mx-auto w-full flex-grow">
         
         <!-- Header -->
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center mt-2">
             <div>
-                <h1 class="text-xl font-bold tracking-widest italic text-blue-500">Dex-X Xiaomi Plus</h1>
-                <p class="text-[10px] text-gray-500 uppercase tracking-tighter">Waterdrop Software - によって開発されました。 </p>
+                <h1 class="text-lg font-bold tracking-widest italic text-blue-500 leading-none">Dex-X Xiaomi Plus</h1>
+                <p class="text-[9px] text-gray-500 uppercase tracking-tighter mt-1">Waterdrop Software - によって開発されました。</p>
             </div>
-            <div id="battery-status" class="text-xs bg-blue-900/30 px-3 py-1 rounded-full border border-blue-500/30">
-                BATTERY: --%
+            <div id="battery-status" class="text-[10px] bg-blue-900/30 px-3 py-1 rounded-full border border-blue-500/30 font-mono">
+                BAT: --%
             </div>
         </div>
 
         <!-- Status Rings -->
-        <div class="grid grid-cols-2 gap-4">
-            <div class="glass-card p-4 flex flex-col items-center">
-                <div class="relative w-24 h-24">
-                    <svg class="w-full h-full">
+        <div class="grid grid-cols-2 gap-3">
+            <div class="glass-card p-3 flex flex-col items-center">
+                <div class="relative ring-container">
+                    <svg class="w-full h-full" viewBox="0 0 96 96">
                         <circle class="text-gray-800" stroke-width="6" stroke="currentColor" fill="transparent" r="40" cx="48" cy="48"/>
                         <circle id="fps-ring" class="text-blue-500 progress-ring__circle" stroke-width="6" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="48" cy="48"/>
                     </svg>
                     <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <span id="fps-val" class="text-xl font-bold">0</span>
-                        <span class="text-[8px] text-gray-400">FPS</span>
+                        <span id="fps-val" class="text-lg font-bold">0</span>
+                        <span class="text-[7px] text-gray-400">FPS</span>
                     </div>
                 </div>
-                <span class="mt-2 text-[10px] uppercase tracking-widest text-blue-400">Frame Rate</span>
+                <span class="mt-2 text-[9px] uppercase tracking-widest text-blue-400">Frame Rate</span>
             </div>
 
-            <div class="glass-card p-4 flex flex-col items-center">
-                <div class="relative w-24 h-24">
-                    <svg class="w-full h-full">
+            <div class="glass-card p-3 flex flex-col items-center">
+                <div class="relative ring-container">
+                    <svg class="w-full h-full" viewBox="0 0 96 96">
                         <circle class="text-gray-800" stroke-width="6" stroke="currentColor" fill="transparent" r="40" cx="48" cy="48"/>
                         <circle id="gpu-ring" class="text-white progress-ring__circle" stroke-width="6" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="48" cy="48"/>
                     </svg>
                     <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <span id="gpu-val" class="text-xl font-bold">0</span>
-                        <span class="text-[8px] text-gray-400">%</span>
+                        <span id="gpu-val" class="text-lg font-bold">0</span>
+                        <span class="text-[7px] text-gray-400">%</span>
                     </div>
                 </div>
-                <span class="mt-2 text-[10px] uppercase tracking-widest text-white">GPU Load</span>
+                <span class="mt-2 text-[9px] uppercase tracking-widest text-white">GPU Load</span>
             </div>
         </div>
 
         <!-- Device Info -->
         <div class="glass-card p-4">
-            <div class="flex justify-between mb-2">
-                <span class="text-[10px] text-gray-400 uppercase">Device Identification</span>
-                <span id="temp-val" class="text-[10px] text-blue-400 italic">Temp: 32°C</span>
+            <div class="flex justify-between mb-3">
+                <span class="text-[9px] text-gray-400 uppercase tracking-wider">Identification</span>
+                <span id="temp-val" class="text-[9px] text-blue-400 italic">Temp: 32°C</span>
             </div>
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-3">
                 <div class="bg-black/40 p-2 rounded-lg border border-white/5">
-                    <p class="text-[8px] text-blue-500">MODEL</p>
-                    <p id="model-name" class="text-[10px] truncate">...Detecting</p>
+                    <p class="text-[7px] text-blue-500 font-bold mb-1">MODEL</p>
+                    <p id="model-name" class="text-[10px] truncate opacity-80">...Detecting</p>
                 </div>
                 <div class="bg-black/40 p-2 rounded-lg border border-white/5">
-                    <p class="text-[8px] text-blue-500">ENGINE</p>
-                    <p class="text-[10px]">VULKAN 1.3</p>
+                    <p class="text-[7px] text-blue-500 font-bold mb-1">ENGINE</p>
+                    <p class="text-[10px] opacity-80">VULKAN 1.3</p>
                 </div>
             </div>
         </div>
 
-        <!-- Kernel Terminal (The "Cool" Part) -->
-        <div class="glass-card flex-1 p-4 overflow-hidden relative">
-            <div id="kernel-box" class="kernel-log h-full overflow-hidden leading-tight">
+        <!-- Kernel Terminal (Auto-Scaling Area) -->
+        <div class="glass-card flex-grow min-h-[120px] p-4 overflow-hidden relative">
+            <div id="kernel-box" class="kernel-log h-full overflow-hidden leading-snug">
                 [SYSTEM] Ready to inject...
             </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent pointer-events-none"></div>
         </div>
 
         <!-- Overclock Toggle -->
-        <div class="glass-card p-5 flex items-center justify-between">
+        <div class="glass-card p-4 mb-2 flex items-center justify-between">
             <div>
-                <p class="text-sm font-bold">BOOST MODE</p>
-                <p id="status-text" class="text-[9px] text-gray-500 uppercase tracking-widest">Awaiting Command</p>
+                <p class="text-xs font-bold tracking-wide">BOOST MODE</p>
+                <p id="status-text" class="text-[8px] text-gray-500 uppercase tracking-widest mt-1">Awaiting Command</p>
             </div>
             
             <label for="toggle" class="flex items-center cursor-pointer">
                 <div class="relative">
                     <input type="checkbox" id="toggle" class="sr-only" onchange="startOverclock(this)">
-                    <div class="block bg-gray-800 w-14 h-8 rounded-full border border-white/10"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition duration-300 ease-in-out"></div>
+                    <div class="block bg-gray-800 w-12 h-7 rounded-full border border-white/10"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-all duration-300"></div>
                 </div>
             </label>
         </div>
@@ -168,22 +172,30 @@
         const statusText = document.getElementById('status-text');
         const modelName = document.getElementById('model-name');
         
-        // ข้อมูลจำลองสำหรับ Kernel (Pattern จะสุ่มทุกครั้ง)
         const commands = [
-            "SET_GPU_CLOCK_LIMIT 1200MHz", "BYPASS_THERMAL_THROTTLE", "INJECT_LUA_SCRIPT_V3",
-            "CLEANING_CACHE_MEMORY", "ALLOCATING_VRAM_BUFFER", "SYNC_VSYNC_INTERRUPT",
-            "OVERRIDE_KERNEL_OOM", "MOUNT_DEBUG_FS", "ENABLE_TURBO_CORE",
-            "PATCHING_ADRENO_GL", "BYPASS_POWER_MANAGER", "FORCE_MAX_PERF"
+            "SET_GPU_CLOCK 1200MHz", "BYPASS_THERMAL", "INJECT_LUA_V3",
+            "CLEAN_MEMORY", "ALLOC_VRAM", "SYNC_VSYNC",
+            "OVERRIDE_OOM", "MOUNT_DEBUG", "ENABLE_TURBO",
+            "PATCH_ADRENO", "BYPASS_PWR", "FORCE_MAX_PERF"
         ];
 
-        // ตรวจสอบชื่อรุ่นเบื้องต้น
-        modelName.innerText = navigator.userAgent.split(';')[1] || "Android Device";
+        // Mobile Friendly UA detection
+        const ua = navigator.userAgent;
+        if (ua.includes("Android")) {
+            const model = ua.match(/Android\s([^\s;]+)/);
+            modelName.innerText = model ? "Android " + model[1] : "Mobile Device";
+        } else if (ua.includes("iPhone")) {
+            modelName.innerText = "Apple iPhone";
+        } else {
+            modelName.innerText = "Generic Device";
+        }
 
         function logToKernel(msg) {
             const line = document.createElement('div');
-            line.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            line.className = "mb-1 border-l-2 border-blue-500/30 pl-2";
+            line.innerText = `[${new Date().toLocaleTimeString([], {hour12:false})}] ${msg}`;
             kernelBox.prepend(line);
-            if(kernelBox.childNodes.length > 15) kernelBox.lastChild.remove();
+            if(kernelBox.childNodes.length > 20) kernelBox.lastChild.remove();
         }
 
         function startOverclock(el) {
@@ -198,70 +210,74 @@
                 let count = 0;
                 const interval = setInterval(() => {
                     const randomCmd = commands[Math.floor(Math.random() * commands.length)];
-                    const randomHex = Math.random().toString(16).substring(2, 10).toUpperCase();
+                    const randomHex = Math.random().toString(16).substring(2, 8).toUpperCase();
                     logToKernel(`${randomCmd} > 0x${randomHex}`);
                     
                     count++;
-                    if(count > 10) {
+                    if(count > 12) {
                         clearInterval(interval);
                         statusText.innerText = "System Overclocked";
                         el.disabled = false;
                         parent.classList.remove('cooldown');
                         boostStats();
                     }
-                }, 200);
+                }, 150);
             } else {
-                statusText.innerText = "Restoring Defaults...";
+                statusText.innerText = "Restoring...";
                 setTimeout(() => {
-                    logToKernel("FLUSHING_VOLTAGE_OFFSET...");
-                    logToKernel("SYSTEM_RECOVERY_OK");
+                    logToKernel("FLUSHING_VOLTAGE...");
+                    logToKernel("RECOVERY_SUCCESS");
                     statusText.innerText = "Awaiting Command";
                     statusText.classList.remove('text-blue-400');
                     el.disabled = false;
                     parent.classList.remove('cooldown');
-                }, 2000);
+                }, 1500);
             }
         }
 
         function setProgress(id, percent) {
             const circle = document.getElementById(id);
-            const radius = circle.r.baseVal.value;
-            const circumference = radius * 2 * Math.PI;
+            const circumference = 40 * 2 * Math.PI; // r=40
             const offset = circumference - (percent / 100 * circumference);
             circle.style.strokeDashoffset = offset;
         }
 
         function boostStats() {
-            // ฟังชั่นหลอกๆ เพิ่มตัวเลขให้ดูแรงขึ้น
             updateStats(true);
         }
 
         function updateStats(boost = false) {
-            const baseFps = boost ? 90 : 55;
-            const baseGpu = boost ? 85 : 40;
+            const isToggled = document.getElementById('toggle').checked;
+            const currentBoost = boost || isToggled;
+            
+            const baseFps = currentBoost ? 90 : 55;
+            const baseGpu = currentBoost ? 85 : 40;
 
             const fps = baseFps + Math.floor(Math.random() * 15);
             const gpu = baseGpu + Math.floor(Math.random() * 10);
-            const temp = 35 + Math.floor(Math.random() * 15);
+            const temp = (currentBoost ? 42 : 32) + Math.floor(Math.random() * 8);
 
             document.getElementById('fps-val').innerText = fps;
             document.getElementById('gpu-val').innerText = gpu;
             document.getElementById('temp-val').innerText = `Temp: ${temp}°C`;
 
-            setProgress('fps-ring', (fps/120)*100);
-            setProgress('gpu-ring', gpu);
+            setProgress('fps-ring', Math.min((fps/120)*100, 100));
+            setProgress('gpu-ring', Math.min(gpu, 100));
         }
 
-        // Real Battery
-        navigator.getBattery().then(bat => {
-            const updateBat = () => document.getElementById('battery-status').innerText = `BATTERY: ${Math.round(bat.level * 100)}%`;
-            updateBat();
-            bat.addEventListener('levelchange', updateBat);
-        });
+        // Battery API
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(bat => {
+                const updateBat = () => {
+                    document.getElementById('battery-status').innerText = `BAT: ${Math.round(bat.level * 100)}%`;
+                };
+                updateBat();
+                bat.addEventListener('levelchange', updateBat);
+            });
+        }
 
-        setInterval(() => updateStats(document.getElementById('toggle').checked), 1500);
+        setInterval(() => updateStats(), 2000);
         updateStats();
-
     </script>
 </body>
 </html>
