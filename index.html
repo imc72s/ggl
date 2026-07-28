@@ -1,1386 +1,734 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>Dexxels — Dev &amp; Mod Toolkit</title>
-<style>
-:root{
-  --bg-0:#050b0d;
-  --bg-1:#08151a;
-  --bg-2:#0d1e24;
-  --panel:#0b1a20;
-  --panel-2:#0f232a;
-  --line:rgba(96,235,255,.14);
-  --cyan:#39e9ff;
-  --cyan-2:#00c2d8;
-  --cyan-dim:#0aa7bd;
-  --ink:#dff8fb;
-  --ink-dim:#8fb4bb;
-  --ink-faint:#5b7d84;
-  --danger:#ff6b6b;
-  --ok:#3dffb0;
-  --radius:16px;
-  --mono: 'JetBrains Mono','Fira Code',ui-monospace,Menlo,Consolas,monospace;
-  --sans: 'Space Grotesk','Inter',system-ui,-apple-system,sans-serif;
-}
-*{box-sizing:border-box;}
-html,body{height:100%;}
-body{
-  margin:0;
-  font-family:var(--sans);
-  background:
-    radial-gradient(1200px 600px at 15% -10%, rgba(57,233,255,.10), transparent 60%),
-    radial-gradient(1000px 500px at 100% 0%, rgba(0,194,216,.08), transparent 55%),
-    linear-gradient(180deg,var(--bg-0),var(--bg-1) 40%,var(--bg-0));
-  color:var(--ink);
-  min-height:100%;
-  overflow-x:hidden;
-}
-::selection{background:rgba(57,233,255,.3);color:#fff;}
-::-webkit-scrollbar{width:10px;height:10px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(57,233,255,.25);border-radius:10px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(57,233,255,.45);}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVault — Premium Bitcoin Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            background: #0a0e17;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
 
-/* ---------- background fx ---------- */
-.grid-fx{
-  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
-  background-image:
-    linear-gradient(rgba(57,233,255,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57,233,255,.05) 1px, transparent 1px);
-  background-size:42px 42px;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 10%, transparent 75%);
-}
-.glow-orb{
-  position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;
-  animation:float 14s ease-in-out infinite;
-}
-.glow-orb.a{width:420px;height:420px;background:rgba(57,233,255,.16);top:-120px;left:-100px;}
-.glow-orb.b{width:360px;height:360px;background:rgba(0,194,216,.12);bottom:-140px;right:-80px;animation-delay:-6s;}
-@keyframes float{
-  0%,100%{transform:translate(0,0) scale(1);}
-  50%{transform:translate(30px,-25px) scale(1.06);}
-}
+        /* Animated background orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+        .orb-1 {
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: rgba(6, 182, 212, 0.08);
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            bottom: -10%; right: -10%;
+            width: 600px; height: 600px;
+            background: rgba(147, 51, 234, 0.06);
+            animation-delay: -7s;
+        }
+        .orb-3 {
+            top: 40%; left: 60%;
+            width: 400px; height: 400px;
+            background: rgba(59, 130, 246, 0.05);
+            animation-delay: -14s;
+        }
 
-/* ---------- fade/entry animations ---------- */
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes scaleIn{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:scale(1);}}
-@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(57,233,255,.35);}50%{box-shadow:0 0 0 6px rgba(57,233,255,0);}}
-@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
 
-.reveal{animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both;}
-.reveal-1{animation-delay:.05s;}
-.reveal-2{animation-delay:.12s;}
-.reveal-3{animation-delay:.2s;}
+        /* Fade in animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.15); }
+            50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.3); }
+        }
 
-/* ---------- layout shell ---------- */
-.shell{position:relative;z-index:1;max-width:1360px;margin:0 auto;padding:26px 22px 80px;}
+        .anim-fade-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .anim-delay-1 { animation-delay: 0.1s; }
+        .anim-delay-2 { animation-delay: 0.2s; }
+        .anim-delay-3 { animation-delay: 0.3s; }
+        .anim-delay-4 { animation-delay: 0.4s; }
+        .anim-delay-5 { animation-delay: 0.5s; }
+        .anim-delay-6 { animation-delay: 0.6s; }
+        .anim-delay-7 { animation-delay: 0.7s; }
 
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:14px 20px;border-radius:20px;
-  background:linear-gradient(180deg, rgba(13,30,36,.75), rgba(9,20,25,.6));
-  border:1px solid var(--line);
-  backdrop-filter:blur(14px);
-  animation:fadeUp .55s cubic-bezier(.16,1,.3,1) both;
-}
-.brand{display:flex;align-items:center;gap:12px;}
-.brand-mark{
-  width:38px;height:38px;border-radius:11px;position:relative;flex:none;
-  background:conic-gradient(from 210deg, var(--cyan), var(--cyan-2), #063a42, var(--cyan));
-  box-shadow:0 0 22px rgba(57,233,255,.45), inset 0 0 10px rgba(0,0,0,.35);
-  animation:spin 9s linear infinite;
-}
-.brand-mark::after{
-  content:"";position:absolute;inset:6px;border-radius:8px;background:var(--bg-0);
-}
-.brand-text{display:flex;flex-direction:column;line-height:1.05;}
-.brand-text b{font-size:19px;letter-spacing:.5px;font-weight:700;
-  background:linear-gradient(90deg,#eafffe,var(--cyan) 60%,#8ff5ff);
-  -webkit-background-clip:text;background-clip:text;color:transparent;}
-.brand-text span{font-size:10.5px;letter-spacing:2.5px;color:var(--ink-faint);text-transform:uppercase;}
+        /* Glass morphism cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(6, 182, 212, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
 
-.status-pill{
-  display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-dim);
-  padding:7px 13px;border-radius:99px;border:1px solid var(--line);background:rgba(57,233,255,.04);
-}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulseGlow 2s infinite;}
+        /* Balance card gradient */
+        .balance-card {
+            background: linear-gradient(135deg, #111827 0%, #0f172a 50%, #1e1b4b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.03), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 8s linear infinite;
+        }
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+            transform: translate(30%, -50%);
+            pointer-events: none;
+        }
 
-/* ---------- hero ---------- */
-.hero{margin-top:34px;position:relative;}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--cyan);padding:6px 14px;border:1px solid var(--line);
-  border-radius:99px;background:rgba(57,233,255,.05);
-}
-.hero h1{
-  font-size:clamp(34px,6vw,64px);line-height:1.02;margin:18px 0 14px;letter-spacing:-1px;font-weight:700;
-}
-.hero h1 .accent{
-  background:linear-gradient(100deg,var(--cyan) 10%,#7ef5ff 40%,var(--cyan-2) 70%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  background-size:200% auto;animation:shimmer 5s linear infinite;
-}
-.hero p{max-width:640px;color:var(--ink-dim);font-size:15.5px;line-height:1.7;}
+        /* Button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+        }
+        .btn-primary:hover::before { opacity: 1; }
+        .btn-primary:active { transform: translateY(0) scale(0.98); }
 
-/* ---------- tab system ---------- */
-.tabs-wrap{margin-top:34px;position:relative;}
-.tabs{
-  display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin;
-}
-.tab-btn{
-  flex:none;position:relative;cursor:pointer;user-select:none;
-  padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;letter-spacing:.2px;
-  color:var(--ink-dim);background:rgba(255,255,255,.02);border:1px solid var(--line);
-  display:flex;align-items:center;gap:9px;white-space:nowrap;
-  transition:color .25s ease, border-color .25s ease, background .25s ease, transform .2s ease;
-}
-.tab-btn:hover{color:var(--ink);border-color:rgba(57,233,255,.35);transform:translateY(-1px);}
-.tab-btn.active{
-  color:#04191d;background:linear-gradient(135deg,var(--cyan),var(--cyan-2));
-  border-color:transparent;box-shadow:0 6px 22px rgba(57,233,255,.28);
-}
-.tab-ico{width:16px;height:16px;flex:none;opacity:.9;}
-.tab-num{
-  font-family:var(--mono);font-size:10px;opacity:.6;
-}
+        /* Chart glow */
+        .chart-container {
+            position: relative;
+        }
+        .chart-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 100px;
+            background: linear-gradient(to top, rgba(10, 14, 23, 0.8), transparent);
+            pointer-events: none;
+        }
 
-.panel-stage{margin-top:22px;position:relative;min-height:420px;}
-.panel{
-  display:none;
-  background:linear-gradient(180deg, rgba(15,35,42,.55), rgba(8,18,22,.55));
-  border:1px solid var(--line);border-radius:var(--radius);
-  padding:26px;backdrop-filter:blur(10px);
-}
-.panel.active{display:block;animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both;}
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0e17; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
-.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px;}
-.panel-title{display:flex;align-items:center;gap:12px;}
-.panel-title .ico-box{
-  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none;
-  background:linear-gradient(150deg, rgba(57,233,255,.16), rgba(0,194,216,.05));
-  border:1px solid var(--line);
-}
-.panel-title h2{margin:0;font-size:20px;letter-spacing:.2px;}
-.panel-title p{margin:2px 0 0;color:var(--ink-faint);font-size:12.5px;}
-.badge{font-size:10px;letter-spacing:1px;padding:3px 9px;border-radius:99px;border:1px solid rgba(255,107,107,.4);color:#ffb3b3;background:rgba(255,107,107,.08);text-transform:uppercase;}
+        /* Modal */
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-/* ---------- form controls ---------- */
-.field{margin-bottom:16px;}
-.field label{display:block;font-size:12px;color:var(--ink-dim);margin-bottom:7px;letter-spacing:.3px;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
-@media (max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+        /* Number counter animation */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-input[type=text],input[type=number],select,textarea{
-  width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
-  background:rgba(4,12,15,.55);color:var(--ink);font-family:var(--sans);font-size:13.5px;
-  outline:none;transition:border-color .2s ease, box-shadow .2s ease;
-}
-input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(57,233,255,.12);}
-textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:12.5px;line-height:1.6;}
-select{cursor:pointer;}
-input[type=file]{
-  width:100%;padding:10px;border-radius:10px;border:1px dashed rgba(57,233,255,.35);
-  background:rgba(57,233,255,.03);color:var(--ink-dim);font-size:12.5px;cursor:pointer;
-}
+        /* Live indicator */
+        .live-dot {
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
 
-.chip-select{display:flex;flex-wrap:wrap;gap:8px;}
-.chip{
-  padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.02);
-  font-size:12.5px;color:var(--ink-dim);cursor:pointer;transition:all .2s ease;
-}
-.chip:hover{border-color:rgba(57,233,255,.4);color:var(--ink);}
-.chip.active{background:linear-gradient(135deg,var(--cyan),var(--cyan-2));color:#04191d;border-color:transparent;font-weight:600;}
+        /* Activity item hover */
+        .activity-item {
+            transition: all 0.3s ease;
+        }
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .activity-item:hover .activity-icon {
+            transform: scale(1.1);
+        }
 
-.btn{
-  display:inline-flex;align-items:center;gap:8px;justify-content:center;
-  padding:12px 22px;border-radius:11px;border:none;cursor:pointer;font-weight:600;font-size:13.5px;
-  background:linear-gradient(135deg,var(--cyan),var(--cyan-2));color:#04191d;
-  transition:transform .2s ease, box-shadow .2s ease;box-shadow:0 8px 24px rgba(57,233,255,.22);
-}
-.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(57,233,255,.34);}
-.btn:active{transform:translateY(0);}
-.btn.ghost{background:rgba(57,233,255,.06);color:var(--cyan);border:1px solid rgba(57,233,255,.3);box-shadow:none;}
-.btn.ghost:hover{background:rgba(57,233,255,.12);}
-.btn.small{padding:8px 14px;font-size:12px;}
-.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+        /* Input focus glow */
+        input:focus {
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+        }
 
-/* ---------- output ---------- */
-.output-wrap{margin-top:22px;position:relative;}
-.output-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.output-head h3{margin:0;font-size:13px;color:var(--ink-dim);letter-spacing:.5px;text-transform:uppercase;font-weight:600;}
-.code-box{
-  position:relative;background:#03090b;border:1px solid var(--line);border-radius:12px;
-  padding:18px;max-height:420px;overflow:auto;font-family:var(--mono);font-size:12.5px;line-height:1.65;
-  color:#b9f6ff;white-space:pre-wrap;word-break:break-word;
-}
-.code-box.empty{color:var(--ink-faint);font-family:var(--sans);}
-.copy-toast{
-  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:linear-gradient(135deg,var(--cyan),var(--cyan-2));color:#04191d;font-weight:700;
-  padding:12px 22px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;
-  transition:all .35s cubic-bezier(.16,1,.3,1);z-index:999;box-shadow:0 12px 30px rgba(57,233,255,.35);
-}
-.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-.hint{font-size:11.5px;color:var(--ink-faint);margin-top:8px;line-height:1.6;}
-.divider{height:1px;background:var(--line);margin:22px 0;border:none;}
-
-/* preview boxes for dialog/toast/splash mock */
-.mock-phone{
-  border:1px solid var(--line);border-radius:16px;padding:20px;background:rgba(3,10,12,.5);
-  display:flex;align-items:center;justify-content:center;min-height:180px;position:relative;overflow:hidden;
-}
-.mock-dialog{
-  background:#0f2731;border:1px solid rgba(57,233,255,.3);border-radius:14px;padding:18px;width:min(280px,90%);
-  animation:scaleIn .35s cubic-bezier(.16,1,.3,1) both;box-shadow:0 20px 50px rgba(0,0,0,.5);
-}
-.mock-dialog h4{margin:0 0 8px;font-size:14.5px;color:#fff;}
-.mock-dialog p{margin:0 0 14px;font-size:12px;color:var(--ink-dim);line-height:1.6;}
-.mock-dialog .btns{display:flex;justify-content:flex-end;gap:14px;}
-.mock-dialog .btns span{color:var(--cyan);font-size:12.5px;font-weight:700;cursor:default;}
-.mock-toast{
-  background:rgba(20,20,20,.92);color:#fff;padding:10px 18px;border-radius:99px;font-size:12.5px;
-  animation:fadeUp .4s ease both, fadeOut .4s ease 2.2s both;box-shadow:0 10px 26px rgba(0,0,0,.4);
-}
-@keyframes fadeOut{to{opacity:0;transform:translateY(10px);}}
-.mock-splash{
-  width:100%;height:180px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-  background:radial-gradient(circle at 50% 30%, rgba(57,233,255,.15), #05121500 70%), #061419;
-}
-.mock-splash img{width:56px;height:56px;border-radius:14px;object-fit:cover;box-shadow:0 0 24px rgba(57,233,255,.4);animation:scaleIn .6s cubic-bezier(.16,1,.3,1) both;}
-.mock-splash .t{color:#fff;font-weight:700;font-size:15px;letter-spacing:.5px;}
-.mock-splash .s{color:var(--ink-dim);font-size:11.5px;}
-
-/* file drop for dumper */
-.drop-zone{
-  border:1.5px dashed rgba(57,233,255,.35);border-radius:14px;padding:34px 20px;text-align:center;
-  cursor:pointer;transition:all .25s ease;background:rgba(57,233,255,.02);
-}
-.drop-zone:hover,.drop-zone.drag{border-color:var(--cyan);background:rgba(57,233,255,.06);}
-.drop-zone .ico{width:38px;height:38px;margin:0 auto 12px;opacity:.8;}
-.drop-zone p{margin:0;color:var(--ink-dim);font-size:13px;}
-.drop-zone span{color:var(--ink-faint);font-size:11.5px;}
-
-.file-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
-.file-row{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;
-  border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:12.5px;
-  animation:fadeUp .35s ease both;
-}
-.file-row .fname{color:var(--ink);}
-.file-row .fsize{color:var(--ink-faint);font-family:var(--mono);font-size:11px;}
-
-/* full page result overlay for dumper */
-.overlay{
-  position:fixed;inset:0;background:rgba(2,7,9,.85);backdrop-filter:blur(6px);z-index:200;
-  display:none;align-items:flex-start;justify-content:center;padding:40px 18px;overflow:auto;
-}
-.overlay.show{display:flex;animation:fadeIn .3s ease both;}
-.overlay-card{
-  width:min(980px,100%);background:linear-gradient(180deg,#0d222a,#081418);border:1px solid var(--line);
-  border-radius:18px;padding:26px;animation:scaleIn .35s cubic-bezier(.16,1,.3,1) both;
-}
-.overlay-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-.overlay-head h3{margin:0;font-size:18px;}
-.close-btn{
-  width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);
-  color:var(--ink-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;
-  transition:all .2s ease;
-}
-.close-btn:hover{color:#fff;border-color:var(--danger);background:rgba(255,107,107,.08);}
-
-/* spinner */
-.spinner{
-  width:16px;height:16px;border-radius:50%;border:2px solid rgba(4,25,29,.25);border-top-color:#04191d;
-  animation:spin .7s linear infinite;
-}
-
-/* footer */
-footer{
-  margin-top:60px;text-align:center;color:var(--ink-faint);font-size:12px;padding-top:24px;border-top:1px solid var(--line);
-}
-footer b{color:var(--cyan);}
-
-/* landscape / portrait tweaks */
-@media (max-width:640px){
-  .shell{padding:16px 14px 60px;}
-  .topbar{padding:12px 14px;border-radius:16px;}
-  .brand-text b{font-size:16px;}
-  .hero h1{font-size:32px;}
-  .panel{padding:18px;}
-  .tab-btn{padding:10px 14px;font-size:12.5px;}
-}
-@media (orientation:landscape) and (max-height:480px){
-  .hero{margin-top:16px;}
-  .hero h1{font-size:26px;margin:10px 0;}
-  .panel-stage{min-height:280px;}
-}
-</style>
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .balance-amount { font-size: 2rem; }
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen">
+    <!-- Background Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-<div class="grid-fx"></div>
-<div class="glow-orb a"></div>
-<div class="glow-orb b"></div>
+    <!-- Navbar -->
+    <nav class="relative z-50 flex items-center justify-between px-4 md:px-8 py-4 border-b border-white/5 backdrop-blur-xl bg-[#0a0e17]/80 sticky top-0">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight">CryptoVault</h1>
+                <p class="text-xs text-gray-400">Premium Wallet</p>
+            </div>
+        </div>
 
-<div class="shell">
+        <div class="hidden md:flex items-center gap-6 text-sm text-gray-400">
+            <a href="#" class="hover:text-cyan-400 transition-colors duration-300">Dashboard</a>
+            <a href="#" class="hover:text-cyan-400 transition-colors duration-300">Markets</a>
+            <a href="#" class="hover:text-cyan-400 transition-colors duration-300">History</a>
+            <a href="#" class="hover:text-cyan-400 transition-colors duration-300">Settings</a>
+        </div>
 
-  <div class="topbar">
-    <div class="brand">
-      <div class="brand-mark"></div>
-      <div class="brand-text">
-        <b>DEXXELS</b>
-        <span>Dev &amp; Modding Toolkit</span>
-      </div>
+        <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                <div class="w-2 h-2 rounded-full bg-green-400 live-dot"></div>
+                <span class="text-xs text-green-400 font-medium">Live</span>
+            </div>
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-white/10 flex items-center justify-center cursor-pointer hover:border-white/20 transition-colors">
+                <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-6 space-y-6">
+
+        <!-- Hero Balance Card -->
+        <div class="balance-card rounded-3xl border border-white/10 p-6 md:p-10 shadow-2xl anim-fade-up">
+            <div class="relative flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div class="space-y-2">
+                    <p class="text-gray-400 text-sm font-medium tracking-wide uppercase">Total Balance</p>
+                    <div class="flex items-baseline gap-3 flex-wrap">
+                        <h2 class="balance-amount text-4xl md:text-6xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent tracking-tight" id="btcBalance">
+                            324.10582062
+                        </h2>
+                        <span class="text-xl md:text-2xl text-cyan-400 font-semibold">BTC</span>
+                    </div>
+                    <div class="flex items-center gap-3 mt-2 flex-wrap">
+                        <span id="usdValue" class="text-lg md:text-xl text-gray-300 font-medium">$0.00</span>
+                        <span class="px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold border border-green-500/20 flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            +2.34%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="showWithdraw()" class="btn-primary px-6 py-3 rounded-2xl text-white font-semibold shadow-lg flex items-center gap-2">
+                        <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        <span class="relative z-10">Withdraw</span>
+                    </button>
+                    <button class="px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-all duration-300 hover:scale-105 active:scale-95">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-card rounded-2xl p-5 anim-fade-up anim-delay-1">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-gray-400 text-sm">24h High</span>
+                    <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    </div>
+                </div>
+                <p id="high24" class="text-xl font-bold text-white">$0.00</p>
+                <p class="text-xs text-green-400 mt-1">+1.2% vs yesterday</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 anim-fade-up anim-delay-2">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-gray-400 text-sm">24h Low</span>
+                    <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg>
+                    </div>
+                </div>
+                <p id="low24" class="text-xl font-bold text-white">$0.00</p>
+                <p class="text-xs text-red-400 mt-1">-0.8% vs yesterday</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 anim-fade-up anim-delay-3">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-gray-400 text-sm">Market Cap</span>
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    </div>
+                </div>
+                <p id="marketCap" class="text-xl font-bold text-white">$0.00</p>
+                <p class="text-xs text-gray-400 mt-1">Rank #1</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 anim-fade-up anim-delay-4">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-gray-400 text-sm">24h Volume</span>
+                    <div class="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                </div>
+                <p id="volume24" class="text-xl font-bold text-white">$0.00</p>
+                <p class="text-xs text-gray-400 mt-1">High activity</p>
+            </div>
+        </div>
+
+        <!-- Price Chart & Converter -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Chart -->
+            <div class="lg:col-span-2 glass-card rounded-3xl p-6 anim-fade-up anim-delay-5">
+                <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">BTC/USD Price</h3>
+                        <p class="text-sm text-gray-400">Real-time market data</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="setTimeframe('1H')" id="btn-1H" class="timeframe-btn px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs font-medium border border-cyan-500/30 transition-all">1H</button>
+                        <button onclick="setTimeframe('24H')" id="btn-24H" class="timeframe-btn px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 text-xs font-medium border border-white/10 hover:bg-white/10 transition-all">24H</button>
+                        <button onclick="setTimeframe('7D')" id="btn-7D" class="timeframe-btn px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 text-xs font-medium border border-white/10 hover:bg-white/10 transition-all">7D</button>
+                    </div>
+                </div>
+                <div class="chart-container relative h-64 md:h-80 w-full">
+                    <canvas id="priceChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <!-- Currency Converter -->
+            <div class="glass-card rounded-3xl p-6 anim-fade-up anim-delay-6" style="background: linear-gradient(180deg, rgba(17,24,39,0.8) 0%, rgba(10,14,23,0.9) 100%);">
+                <h3 class="text-lg font-semibold text-white mb-1">Converter</h3>
+                <p class="text-sm text-gray-400 mb-6">Quick currency exchange</p>
+
+                <div class="space-y-4">
+                    <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
+                        <label class="text-xs text-gray-500 mb-2 block">From (BTC)</label>
+                        <input type="number" id="btcInput" value="1" step="0.00000001" oninput="convertCurrency()" class="w-full bg-transparent text-2xl font-bold text-white outline-none placeholder-gray-600" placeholder="0.00">
+                        <div class="flex items-center gap-2 mt-2">
+                            <div class="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center text-[10px] font-bold text-white">₿</div>
+                            <span class="text-sm text-gray-400">Bitcoin</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <div class="w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center animate-pulse">
+                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
+                        <label class="text-xs text-gray-500 mb-2 block">To (USD)</label>
+                        <input type="text" id="usdOutput" readonly class="w-full bg-transparent text-2xl font-bold text-cyan-400 outline-none" placeholder="0.00">
+                        <div class="flex items-center gap-2 mt-2">
+                            <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-[10px] font-bold text-white">$</div>
+                            <span class="text-sm text-gray-400">US Dollar</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
+                        <label class="text-xs text-gray-500 mb-2 block">To (THB)</label>
+                        <input type="text" id="thbOutput" readonly class="w-full bg-transparent text-2xl font-bold text-purple-400 outline-none" placeholder="0.00">
+                        <div class="flex items-center gap-2 mt-2">
+                            <div class="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center text-[10px] font-bold text-white">฿</div>
+                            <span class="text-sm text-gray-400">Thai Baht</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass-card rounded-3xl p-6 anim-fade-up anim-delay-7">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-white">Recent Activity</h3>
+                <button class="text-sm text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1">
+                    View All
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <div class="activity-item flex items-center justify-between p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="activity-icon w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Received BTC</p>
+                            <p class="text-sm text-gray-400">From: 1A1zP1...e5Qm</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-green-400 font-semibold">+0.5 BTC</p>
+                        <p class="text-xs text-gray-400">2 mins ago</p>
+                    </div>
+                </div>
+
+                <div class="activity-item flex items-center justify-between p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="activity-icon w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Sent BTC</p>
+                            <p class="text-sm text-gray-400">To: bc1qxy2...kgdl</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-red-400 font-semibold">-1.25 BTC</p>
+                        <p class="text-xs text-gray-400">1 hour ago</p>
+                    </div>
+                </div>
+
+                <div class="activity-item flex items-center justify-between p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="activity-icon w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Swap Completed</p>
+                            <p class="text-sm text-gray-400">BTC → ETH</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-blue-400 font-semibold">-0.1 BTC</p>
+                        <p class="text-xs text-gray-400">3 hours ago</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="modal-overlay absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeWithdraw()"></div>
+        <div class="modal-content relative w-full max-w-md p-6 rounded-3xl bg-[#111827] border border-white/10 shadow-2xl transform scale-95 opacity-0" id="withdrawContent">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white">Withdraw BTC</h3>
+                <button onclick="closeWithdraw()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="text-sm text-gray-400 mb-2 block">Recipient Address</label>
+                    <input type="text" placeholder="Enter BTC address (e.g. bc1q...)" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 outline-none focus:border-cyan-500/50 transition-all duration-300">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400 mb-2 block">Amount (BTC)</label>
+                    <input type="number" step="0.00000001" placeholder="0.00" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 outline-none focus:border-cyan-500/50 transition-all duration-300">
+                    <div class="flex justify-between mt-1">
+                        <p class="text-xs text-gray-500">Available: <span class="text-cyan-400">324.10582062 BTC</span></p>
+                        <button class="text-xs text-cyan-400 hover:text-cyan-300">MAX</button>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                    <p class="text-sm text-yellow-400 flex items-start gap-2">
+                        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        This is a design demo only. No real transactions will be processed.
+                    </p>
+                </div>
+                <button class="w-full py-3.5 rounded-xl btn-primary text-white font-semibold">
+                    <span class="relative z-10">Confirm Withdrawal</span>
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="status-pill"><span class="status-dot"></span> All systems ready · client-side</div>
-  </div>
-
-  <div class="hero">
-    <span class="hero-eyebrow reveal">◆ Build tools for modders</span>
-    <h1 class="reveal reveal-1">Every tool a modder<br>needs, in <span class="accent">one place.</span></h1>
-    <p class="reveal reveal-2">แปลง สร้าง และเข้ารหัสโค๊ดสำหรับงาน mod/dev ได้ทันทีในเบราว์เซอร์ — ไม่ต้องอัปโหลดไฟล์ขึ้นเซิร์ฟเวอร์ ทุกอย่างประมวลผลบนเครื่องของคุณ</p>
-  </div>
-
-  <div class="tabs-wrap reveal reveal-3">
-    <div class="tabs" id="tabs"></div>
-  </div>
-
-  <div class="panel-stage" id="panelStage"></div>
-
-  <footer>Crafted for the mod &amp; dev community · <b>Dexxels</b> © 2026 · runs entirely in your browser</footer>
-</div>
-
-<div class="copy-toast" id="copyToast">Copied to clipboard ✓</div>
-
-<div class="overlay" id="dumperOverlay">
-  <div class="overlay-card">
-    <div class="overlay-head">
-      <h3 id="overlayTitle">Dump Result</h3>
-      <button class="close-btn" onclick="closeOverlay()">✕</button>
-    </div>
-    <div class="code-box" id="overlayBody" style="max-height:70vh;"></div>
-    <div class="btn-row" style="margin-top:16px;">
-      <button class="btn ghost small" onclick="closeOverlay()">← กลับ</button>
-      <button class="btn small" id="overlayCopyBtn">คัดลอกทั้งหมด</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* =========================================================
-   DEXXELS — core app logic
-   ========================================================= */
-
-const TABS = [
-  {id:'dextool', label:'DEXTOOL', icon:'code'},
-  {id:'base', label:'BASE32-64', icon:'binary'},
-  {id:'dialog', label:'DIALOG MAKER', icon:'chat'},
-  {id:'soundpool', label:'SOUNDPOOL', icon:'wave'},
-  {id:'toast', label:'TOAST MAKER', icon:'bell'},
-  {id:'dumper', label:'DUMPER', icon:'layers', beta:true},
-  {id:'splash', label:'SPLASH MAKER', icon:'image'},
-];
-
-const ICONS = {
-  code:'<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 17l-5-5 5-5M16 7l5 5-5 5"/></svg>',
-  binary:'<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="7" height="7" rx="1"/><rect x="14" y="12" width="7" height="7" rx="1"/><path d="M6.5 12v5M17.5 5v5"/></svg>',
-  chat:'<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-8.83 8.38 8.5 8.5 0 01-4.11-1.06L3 21l1.18-5.06A8.38 8.38 0 0121 11.5z"/></svg>',
-  wave:'<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 14 3-10 2 5h4"/></svg>',
-  bell:'<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>',
-  layers:'<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
-  image:'<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
-};
-
-function buildTabs(){
-  const wrap = document.getElementById('tabs');
-  wrap.innerHTML = TABS.map((t,i)=>`
-    <div class="tab-btn ${i===0?'active':''}" data-tab="${t.id}" onclick="switchTab('${t.id}')">
-      ${ICONS[t.icon]}
-      <span>${t.label}</span>
-      ${t.beta?'<span class="badge">beta</span>':'<span class="tab-num">0${'+(i+1)+'}</span>'.replace("0${'+(i+1)+'}","0"+(i+1))}
-    </div>`).join('');
-}
-buildTabs();
-
-function switchTab(id){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+id));
-}
-
-function toast(msg){
-  const el = document.getElementById('copyToast');
-  el.textContent = msg || 'Copied to clipboard ✓';
-  el.classList.add('show');
-  clearTimeout(window.__toastT);
-  window.__toastT = setTimeout(()=>el.classList.remove('show'), 1800);
-}
-
-function copyText(text){
-  navigator.clipboard.writeText(text).then(()=>toast('คัดลอกโค๊ดแล้ว ✓')).catch(()=>toast('คัดลอกไม่สำเร็จ'));
-}
-
-function esc(str){
-  return (str||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-/* =========================================================
-   PANEL TEMPLATES
-   ========================================================= */
-const stage = document.getElementById('panelStage');
-
-stage.innerHTML = `
-
-<!-- ============ DEXTOOL ============ -->
-<section class="panel active" id="panel-dextool">
-  <div class="panel-head">
-    <div class="panel-title">
-      <div class="ico-box">${ICONS.code}</div>
-      <div><h2>DEXTOOL</h2><p>แปลง Smali ↔ Java แบบพื้นฐาน สำหรับอ่านโครงสร้างโค๊ดอย่างเร็ว</p></div>
-    </div>
-    <div class="chip-select" id="dexModeSel">
-      <div class="chip active" data-mode="s2j">Smali → Java</div>
-      <div class="chip" data-mode="j2s">Java → Smali</div>
-    </div>
-  </div>
-
-  <div class="field">
-    <label>เลือกไฟล์ (.smali / .java) หรือวางโค๊ดด้านล่างโดยตรง</label>
-    <input type="file" id="dexFile" accept=".smali,.java,.txt">
-  </div>
-  <div class="field">
-    <label id="dexInputLabel">โค๊ด Smali ต้นทาง</label>
-    <textarea id="dexInput" placeholder=".class public Lcom/example/MainActivity;
-.super Landroid/app/Activity;
-
-.method public onCreate(Landroid/os/Bundle;)V
-    .locals 0
-    invoke-super {p0, p1}, Landroid/app/Activity;->onCreate(Landroid/os/Bundle;)V
-    return-void
-.end method"></textarea>
-  </div>
-  <div class="btn-row">
-    <button class="btn" onclick="runDexConvert()">แปลงโค๊ด →</button>
-    <button class="btn ghost" onclick="document.getElementById('dexInput').value='';renderOut('dexOut','');">ล้างค่า</button>
-  </div>
-
-  <div class="output-wrap">
-    <div class="output-head"><h3>ผลลัพธ์</h3><button class="btn ghost small" onclick="copyFromBox('dexOut')">คัดลอก</button></div>
-    <div class="code-box empty" id="dexOut">ผลลัพธ์จะแสดงที่นี่หลังกดแปลงโค๊ด...</div>
-  </div>
-  <p class="hint">* เครื่องมือนี้แปลงโครงสร้างพื้นฐาน (class, method, field, control-flow ง่ายๆ) เพื่อช่วยอ่านโค๊ดเร็วขึ้น ไม่ใช่ตัวถอดคอมไพล์แบบเต็มรูปแบบ สำหรับโปรเจกต์ซับซ้อนแนะนำตรวจสอบผลลัพธ์อีกครั้งก่อนใช้งานจริง</p>
-</section>
-
-<!-- ============ BASE32-64 ============ -->
-<section class="panel" id="panel-base">
-  <div class="panel-head">
-    <div class="panel-title">
-      <div class="ico-box">${ICONS.binary}</div>
-      <div><h2>BASE32-64 Compiler</h2><p>Encode / Decode ข้อความและไฟล์ (PNG, Sound, Text, Other)</p></div>
-    </div>
-    <div class="chip-select" id="baseModeSel">
-      <div class="chip active" data-mode="encode">Encode</div>
-      <div class="chip" data-mode="decode">Decode</div>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="field">
-      <label>ชนิด Base</label>
-      <select id="baseType">
-        <option value="64">Base64</option>
-        <option value="32">Base32</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>ประเภทข้อมูล</label>
-      <select id="baseKind">
-        <option value="text">Text</option>
-        <option value="png">Image (PNG/JPG)</option>
-        <option value="sound">Sound (MP3/WAV/OGG)</option>
-        <option value="other">Other file</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="field" id="baseFileField" style="display:none;">
-    <label>เลือกไฟล์</label>
-    <input type="file" id="baseFile">
-  </div>
-
-  <div class="field" id="baseTextField">
-    <label id="baseInputLabel">ข้อความ / สตริง Base64 ต้นทาง</label>
-    <textarea id="baseInput" placeholder="พิมพ์หรือวางข้อความที่นี่..."></textarea>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn" onclick="runBaseConvert()">ประมวลผล →</button>
-    <button class="btn ghost" onclick="document.getElementById('baseInput').value='';renderOut('baseOut','');">ล้างค่า</button>
-  </div>
-
-  <div class="output-wrap">
-    <div class="output-head"><h3>ผลลัพธ์</h3><button class="btn ghost small" onclick="copyFromBox('baseOut')">คัดลอก</button></div>
-    <div class="code-box empty" id="baseOut">ผลลัพธ์จะแสดงที่นี่...</div>
-  </div>
-  <div id="basePreviewWrap"></div>
-</section>
-
-<!-- ============ DIALOG MAKER ============ -->
-<section class="panel" id="panel-dialog">
-  <div class="panel-head">
-    <div class="panel-title">
-      <div class="ico-box">${ICONS.chat}</div>
-      <div><h2>Dialog Maker</h2><p>สร้างโค๊ด Smali Dialog พร้อมวางใต้ onCreate ได้ทันที</p></div>
-    </div>
-  </div>
-
-  <div class="field">
-    <label>ประเภท Dialog</label>
-    <div class="chip-select" id="dialogTypeSel">
-      <div class="chip active" data-type="normal">Normal</div>
-      <div class="chip" data-type="intent">Intent Dialog</div>
-      <div class="chip" data-type="sound">With Sound</div>
-      <div class="chip" data-type="custom">Custom</div>
-      <div class="chip" data-type="cool">Cool Design</div>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="field"><label>ชื่อ Class หลัก (Activity)</label><input type="text" id="dlgClass" value="com/example/app/MainActivity"></div>
-    <div class="field"><label>Title</label><input type="text" id="dlgTitle" value="แจ้งเตือน"></div>
-  </div>
-  <div class="field"><label>Message</label><input type="text" id="dlgMsg" value="ยินดีต้อนรับเข้าสู่แอปพลิเคชัน"></div>
-  <div class="grid-2">
-    <div class="field"><label>ปุ่มยืนยัน (Positive)</label><input type="text" id="dlgPos" value="ตกลง"></div>
-    <div class="field"><label>ปุ่มยกเลิก (Negative)</label><input type="text" id="dlgNeg" value="ยกเลิก"></div>
-  </div>
-  <div class="field" id="dlgIntentField" style="display:none;">
-    <label>ชื่อ Activity ปลายทาง (สำหรับ Intent)</label>
-    <input type="text" id="dlgIntentTarget" value="com/example/app/SecondActivity">
-  </div>
-  <div class="field" id="dlgSoundField" style="display:none;">
-    <label>Sound Resource name (raw/soundfile ไม่ใส่นามสกุล)</label>
-    <input type="text" id="dlgSoundRes" value="click_sound">
-  </div>
-
-  <div class="btn-row">
-    <button class="btn" onclick="runDialogMaker()">สร้างโค๊ด Dialog →</button>
-  </div>
-
-  <div class="mock-phone" style="margin-top:20px;">
-    <div class="mock-dialog" id="dlgPreview">
-      <h4 id="prevTitle">แจ้งเตือน</h4>
-      <p id="prevMsg">ยินดีต้อนรับเข้าสู่แอปพลิเคชัน</p>
-      <div class="btns"><span id="prevNeg">ยกเลิก</span><span id="prevPos">ตกลง</span></div>
-    </div>
-  </div>
-
-  <div class="output-wrap">
-    <div class="output-head"><h3>Smali Code — วางใต้ onCreate</h3><button class="btn ghost small" onclick="copyFromBox('dlgOut')">คัดลอก</button></div>
-    <div class="code-box empty" id="dlgOut">กดปุ่ม "สร้างโค๊ด Dialog" เพื่อดูผลลัพธ์...</div>
-  </div>
-</section>
-
-<!-- ============ SOUNDPOOL MAKER ============ -->
-<section class="panel" id="panel-soundpool">
-  <div class="panel-head">
-    <div class="panel-title">
-      <div class="ico-box">${ICONS.wave}</div>
-      <div><h2>SoundPool Maker</h2><p>แปลงไฟล์เสียงเป็น Base64 แล้วสร้างโค๊ด Smali สำหรับเล่นเสียงป๊อป</p></div>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="field"><label>เลือกไฟล์เสียง (mp3/wav/ogg)</label><input type="file" id="spFile" accept="audio/*"></div>
-    <div class="field"><label>ชื่อ Field ตัวแปร (สำหรับ smali)</label><input type="text" id="spFieldName" value="clickSound"></div>
-  </div>
-  <div class="field"><label>Class หลักที่จะใช้ SoundPool</label><input type="text" id="spClass" value="com/example/app/MainActivity"></div>
-
-  <div class="btn-row">
-    <button class="btn" onclick="runSoundPool()">แปลงไฟล์ &amp; สร้างโค๊ด →</button>
-  </div>
-
-  <div class="output-wrap">
-    <div class="output-head"><h3>Base64 ของไฟล์เสียง</h3><button class="btn ghost small" onclick="copyFromBox('spB64Out')">คัดลอก</button></div>
-    <div class="code-box empty" id="spB64Out">ยังไม่มีไฟล์...</div>
-  </div>
-  <div class="output-wrap">
-    <div class="output-head"><h3>Smali Code — SoundPool</h3><button class="btn ghost small" onclick="copyFromBox('spCodeOut')">คัดลอก</button></div>
-    <div class="code-box empty" id="spCodeOut">ยังไม่มีโค๊ด...</div>
-  </div>
-</section>
-
-<!-- ============ TOAST MAKER ============ -->
-<section class="panel" id="panel-toast">
-  <div class="panel-head">
-    <div class="panel-title">
-      <div class="ico-box">${ICONS.bell}</div>
-      <div><h2>Toast Maker</h2><p>สร้างโค๊ด Smali Toast หลายสไตล์ พร้อมแอนิเมชันตัวอย่าง</p></div>
-    </div>
-  </div>
-
-  <div class="field">
-    <label>ประเภท Toast</label>
-    <div class="chip-select" id="toastTypeSel">
-      <div class="chip active" data-type="normal">Normal</div>
-      <div class="chip" data-type="sound">With Sound</div>
-      <div class="chip" data-type="custom">Custom</div>
-      <div class="chip" data-type="cool">Cool Design</div>
-    </div>
-  </div>
-  <div class="grid-2">
-    <div class="field"><label>Class หลัก</label><input type="text" id="toastClass" value="com/example/app/MainActivity"></div>
-    <div class="field"><label>ข้อความ Toast</label><input type="text" id="toastMsg" value="ดำเนินการสำเร็จ!"></div>
-  </div>
-  <div class="field" id="toastSoundField" style="display:none;">
-    <label>Sound Resource name</label>
-    <input type="text" id="toastSoundRes" value="toast_sound">
-  </div>
-
-  <div class="btn-row">
-    <button class="btn" onclick="runToastMaker()">สร้างโค๊ด Toast →</button>
-    <button class="btn ghost" onclick="previewToast()">▶ พรีวิว</button>
-  </div>
-
-  <div class="mock-phone" id="toastPreviewWrap" style="margin-top:20px;"></div>
-
-  <div class="output-wrap">
-    <div class="output-head"><h3>Smali Code — วางใต้ onCreate</h3><button class="btn ghost small" onclick="copyFromBox('toastOut')">คัดลอก</button></div>
-    <div class="code-box empty" id="toastOut">กดปุ่ม "สร้างโค๊ด Toast" เพื่อดูผลลัพธ์...</div>
-  </div>
-</section>
-
-<!-- ============ DUMPER ============ -->
-<section class="panel" id="panel-dumper">
-  <div class="panel-head">
-    <div class="panel-title">
-      <div class="ico-box">${ICONS.layers}</div>
-      <div><h2>Dumper <span class="badge" style="margin-left:6px;">beta</span></h2><p>อัปโหลด libil2cpp.so และ global-metadata.dat เพื่อดูข้อมูลเบื้องต้น</p></div>
-    </div>
-  </div>
-
-  <div class="drop-zone" id="dumpDrop" onclick="document.getElementById('dumpFileInput').click()">
-    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#39e9ff" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
-    <p>ลากไฟล์มาวาง หรือคลิกเพื่อเลือกไฟล์</p>
-    <span>รองรับ .so (libil2cpp) และ .dat (global-metadata) — ไม่จำกัดขนาด</span>
-    <input type="file" id="dumpFileInput" multiple style="display:none;">
-  </div>
-  <div class="file-list" id="dumpFileList"></div>
-
-  <div class="btn-row">
-    <button class="btn" onclick="runDumper()">เริ่มวิเคราะห์ →</button>
-  </div>
-  <p class="hint">* เวอร์ชัน beta วิเคราะห์โครงสร้าง string/metadata เบื้องต้นจากไฟล์ที่อัปโหลด เพื่อช่วยสำรวจข้อมูลเบื้องต้นก่อนใช้เครื่องมือ dump เฉพาะทางแบบเต็มรูปแบบ ทุกอย่างประมวลผลในเบราว์เซอร์ ไฟล์ของคุณไม่ถูกอัปโหลดขึ้นเซิร์ฟเวอร์ใดๆ</p>
-</section>
-
-<!-- ============ SPLASH MAKER ============ -->
-<section class="panel" id="panel-splash">
-  <div class="panel-head">
-    <div class="panel-title">
-      <div class="ico-box">${ICONS.image}</div>
-      <div><h2>Splash Screen Maker</h2><p>สร้างหน้า Splash Screen พร้อมโลโก้ Base64 และโค๊ด Smali</p></div>
-    </div>
-  </div>
-
-  <div class="field">
-    <label>สไตล์ Splash</label>
-    <div class="chip-select" id="splashTypeSel">
-      <div class="chip active" data-type="normal">Normal</div>
-      <div class="chip" data-type="custom">Custom</div>
-      <div class="chip" data-type="cool">Cool Design</div>
-    </div>
-  </div>
-  <div class="grid-2">
-    <div class="field"><label>Title</label><input type="text" id="splashTitle" value="MY APPLICATION"></div>
-    <div class="field"><label>Subtitle</label><input type="text" id="splashSub" value="Loading, please wait..."></div>
-  </div>
-  <div class="grid-2">
-    <div class="field"><label>Class หน้า Splash</label><input type="text" id="splashClass" value="com/example/app/SplashActivity"></div>
-    <div class="field"><label>Class ปลายทาง (หน้าถัดไป)</label><input type="text" id="splashNext" value="com/example/app/MainActivity"></div>
-  </div>
-  <div class="field"><label>โลโก้ (รูปภาพ)</label><input type="file" id="splashLogo" accept="image/*"></div>
-  <div class="field"><label>ระยะเวลาแสดง Splash (มิลลิวินาที)</label><input type="number" id="splashDelay" value="2000"></div>
-
-  <div class="btn-row">
-    <button class="btn" onclick="runSplashMaker()">สร้าง Splash →</button>
-  </div>
-
-  <div class="mock-phone" style="margin-top:20px;padding:0;">
-    <div class="mock-splash" id="splashPreview" style="width:100%;">
-      <div class="t" id="splashPrevTitle">MY APPLICATION</div>
-      <div class="s" id="splashPrevSub">Loading, please wait...</div>
-    </div>
-  </div>
-
-  <div class="output-wrap">
-    <div class="output-head"><h3>Smali Code — Splash Activity</h3><button class="btn ghost small" onclick="copyFromBox('splashOut')">คัดลอก</button></div>
-    <div class="code-box empty" id="splashOut">กดปุ่ม "สร้าง Splash" เพื่อดูผลลัพธ์...</div>
-  </div>
-</section>
-`;
-
-/* ---------- generic chip select helper ---------- */
-function setupChipGroup(containerId, cb){
-  const c = document.getElementById(containerId);
-  c.querySelectorAll('.chip').forEach(chip=>{
-    chip.addEventListener('click', ()=>{
-      c.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-      chip.classList.add('active');
-      cb && cb(chip);
-    });
-  });
-}
-
-function renderOut(id, text){
-  const box = document.getElementById(id);
-  if(!text){ box.textContent = box.dataset.empty || 'ผลลัพธ์จะแสดงที่นี่...'; box.classList.add('empty'); return; }
-  box.textContent = text; box.classList.remove('empty');
-}
-function copyFromBox(id){
-  const box = document.getElementById(id);
-  if(box.classList.contains('empty')) return toast('ยังไม่มีข้อมูลให้คัดลอก');
-  copyText(box.textContent);
-}
-
-/* =========================================================
-   1) DEXTOOL — simplified smali <-> java converter
-   ========================================================= */
-let dexMode = 's2j';
-setupChipGroup('dexModeSel', chip=>{
-  dexMode = chip.dataset.mode;
-  document.getElementById('dexInputLabel').textContent = dexMode==='s2j' ? 'โค๊ด Smali ต้นทาง' : 'โค๊ด Java ต้นทาง';
-});
-document.getElementById('dexFile').addEventListener('change', e=>{
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = ()=> document.getElementById('dexInput').value = r.result;
-  r.readAsText(f);
-});
-
-function smaliTypeToJava(t){
-  if(!t) return t;
-  t = t.trim();
-  const map = {V:'void',Z:'boolean',B:'byte',S:'short',C:'char',I:'int',J:'long',F:'float',D:'double'};
-  if(map[t]) return map[t];
-  if(t.startsWith('[')) return smaliTypeToJava(t.slice(1))+'[]';
-  if(t.startsWith('L') && t.endsWith(';')){
-    return t.slice(1,-1).replace(/\//g,'.');
-  }
-  return t;
-}
-function parseSmaliParams(str){
-  const out = []; let i=0;
-  while(i<str.length){
-    const c = str[i];
-    if(c==='['){ let j=i; while(str[j]==='[') j++; if(str[j]==='L'){ let k=str.indexOf(';',j); out.push(str.slice(i,k+1)); i=k+1;} else {out.push(str.slice(i,j+1)); i=j+1;} }
-    else if(c==='L'){ let k=str.indexOf(';',i); out.push(str.slice(i,k+1)); i=k+1; }
-    else { out.push(c); i++; }
-  }
-  return out;
-}
-
-function smaliToJava(src){
-  const lines = src.split('\n');
-  let out = [];
-  let indent = 0;
-  let className='', superName='';
-  const pushLine = (s)=> out.push('    '.repeat(Math.max(indent,0)) + s);
-
-  for(let raw of lines){
-    const line = raw.trim();
-    if(!line || line.startsWith('#')) continue;
-
-    let m;
-    if(m = line.match(/^\.class\s+(.*)\s+L([\w\/$]+);$/)){
-      const mods = m[1].replace(/public|final|abstract|interface/g, w=>w).trim();
-      className = m[2].split('/').pop();
-      const pkg = m[2].split('/').slice(0,-1).join('.');
-      if(pkg) out.push(`package ${pkg};\n`);
-      continue;
-    }
-    if(m = line.match(/^\.super\s+L([\w\/$]+);$/)){
-      superName = m[1].split('/').pop();
-      continue;
-    }
-    if(m = line.match(/^\.implements\s+L([\w\/$]+);$/)){
-      out.push(`// implements ${m[1].split('/').pop()}`);
-      continue;
-    }
-    if(line.startsWith('.class') ){ continue; }
-
-    if(m = line.match(/^\.field\s+(.*?)\s+([\w$]+):(.+)$/)){
-      const mods = m[1].replace(/\bfinal\b/,'final').trim();
-      pushLine(`${mods} ${smaliTypeToJava(m[3])} ${m[2]};`);
-      continue;
-    }
-
-    if(m = line.match(/^\.method\s+(.*?)\s+([\w$<>]+)\((.*?)\)(.+)$/)){
-      const mods = m[1].trim();
-      let name = m[2];
-      const params = parseSmaliParams(m[3]).map(smaliTypeToJava);
-      const ret = smaliTypeToJava(m[4]);
-      if(name==='<init>'){
-        pushLine(`${mods} ${className || 'Constructor'}(${params.map((p,i)=>p+' p'+i).join(', ')}) {`);
-      } else if(name==='<clinit>'){
-        pushLine(`static {`);
-      } else {
-        pushLine(`${mods} ${ret} ${name}(${params.map((p,i)=>p+' arg'+i).join(', ')}) {`);
-      }
-      indent++;
-      continue;
-    }
-    if(line === '.end method'){
-      indent = Math.max(indent-1,0);
-      pushLine('}');
-      pushLine('');
-      continue;
-    }
-    if(line.startsWith('.locals') || line.startsWith('.registers') || line.startsWith('.param') || line.startsWith('.line') || line.startsWith('.annotation') || line.startsWith('.end annotation') || line.startsWith('.prologue')){
-      continue;
-    }
-    if(m = line.match(/^return-void/)){ pushLine('return;'); continue; }
-    if(m = line.match(/^return(?:-\w+)?\s+(\w+)/)){ pushLine(`return ${m[1]};`); continue; }
-    if(m = line.match(/^invoke-\w+(?:\/range)?\s*\{([^}]*)\},\s*L([\w\/$]+);->([\w$<>]+)\((.*?)\)(.+)$/)){
-      const args = m[1].split(',').map(s=>s.trim()).filter(Boolean);
-      const owner = m[2].split('/').pop();
-      pushLine(`${owner}.${m[3]}(${args.join(', ')}); // invoke`);
-      continue;
-    }
-    if(m = line.match(/^const(?:\/\w+)?\s+(\w+),\s*(.+)$/)){
-      pushLine(`var ${m[1]} = ${m[2]}; // const`);
-      continue;
-    }
-    if(m = line.match(/^i(get|put)(?:-\w+)?\s+([^,]+),\s*([^,]+),\s*L([\w\/$]+);->(\w+):(.+)$/)){
-      if(m[1]==='get') pushLine(`${m[2]} = ${m[3]}.${m[5]}; // field get`);
-      else pushLine(`${m[3]}.${m[5]} = ${m[2]}; // field put`);
-      continue;
-    }
-    if(line.startsWith(':')) { pushLine(`// label ${line}`); continue; }
-    if(line.startsWith('goto')) { pushLine(`// ${line}`); continue; }
-    if(line.startsWith('if-')) { pushLine(`// condition: ${line}`); continue; }
-    pushLine(`// ${line}`);
-  }
-  return out.join('\n');
-}
-
-function javaToSmali(src){
-  // best-effort: extract class, fields, methods and produce smali skeleton
-  let out = [];
-  const clsMatch = src.match(/(?:public\s+|final\s+|abstract\s+)*class\s+(\w+)(?:\s+extends\s+([\w.]+))?(?:\s+implements\s+([\w., ]+))?/);
-  const pkgMatch = src.match(/package\s+([\w.]+);/);
-  const pkg = pkgMatch ? pkgMatch[1].replace(/\./g,'/')+'/' : '';
-  const clsName = clsMatch ? clsMatch[1] : 'MyClass';
-  const superName = clsMatch && clsMatch[2] ? clsMatch[2].replace(/\./g,'/') : 'java/lang/Object';
-
-  out.push(`.class public L${pkg}${clsName};`);
-  out.push(`.super L${superName};`);
-  if(clsMatch && clsMatch[3]){
-    clsMatch[3].split(',').forEach(i=> out.push(`.implements L${i.trim().replace(/\./g,'/')};`));
-  }
-  out.push('');
-
-  // fields
-  const fieldRe = /(?:public|private|protected)?\s*(?:static\s+)?(?:final\s+)?(int|long|float|double|boolean|byte|short|char|String|void|[\w.<>\[\]]+)\s+(\w+)\s*(=[^;]+)?;/g;
-  let fm;
-  const javaTypeToSmali = t=>{
-    const map={int:'I',long:'J',float:'F',double:'D',boolean:'Z',byte:'B',short:'S',char:'C',void:'V',String:'Ljava/lang/String;'};
-    if(map[t]) return map[t];
-    if(t.endsWith('[]')) return '['+javaTypeToSmali(t.slice(0,-2));
-    return 'L'+t.replace(/\./g,'/')+';';
-  };
-  while((fm = fieldRe.exec(src))){
-    if(['class'].includes(fm[1])) continue;
-    out.push(`.field private ${fm[2]}:${javaTypeToSmali(fm[1])}`);
-  }
-  out.push('');
-
-  // methods (very rough)
-  const methodRe = /(?:public|private|protected)?\s*(?:static\s+)?(?:final\s+)?(void|int|long|float|double|boolean|byte|short|char|String|[\w.<>\[\]]+)\s+(\w+)\s*\(([^)]*)\)\s*(?:throws[\w., ]+)?\{/g;
-  let mm;
-  while((mm = methodRe.exec(src))){
-    if(mm[2]==='if' || mm[2]==='for' || mm[2]==='while' || mm[2]==='switch' || mm[2]==='catch') continue;
-    const params = mm[3].split(',').map(p=>p.trim()).filter(Boolean).map(p=>{
-      const parts = p.split(/\s+/); return javaTypeToSmali(parts[0]);
-    });
-    out.push(`.method public ${mm[2]}(${params.join('')})${javaTypeToSmali(mm[1])}`);
-    out.push(`    .locals 1`);
-    out.push(`    # TODO: method body converted from Java (manual check required)`);
-    if(mm[1]==='void') out.push(`    return-void`);
-    else out.push(`    # return value required`);
-    out.push(`.end method`);
-    out.push('');
-  }
-  return out.join('\n');
-}
-
-function runDexConvert(){
-  const src = document.getElementById('dexInput').value;
-  if(!src.trim()) return renderOut('dexOut','');
-  const result = dexMode==='s2j' ? smaliToJava(src) : javaToSmali(src);
-  renderOut('dexOut', result || '// ไม่พบโครงสร้างที่รู้จักในโค๊ดนี้');
-}
-
-/* =========================================================
-   2) BASE32-64
-   ========================================================= */
-const B32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-function base32Encode(bytes){
-  let bits=0,value=0,output='';
-  for(let i=0;i<bytes.length;i++){
-    value=(value<<8)|bytes[i]; bits+=8;
-    while(bits>=5){ output+=B32_ALPHABET[(value>>>(bits-5))&31]; bits-=5; }
-  }
-  if(bits>0){ output+=B32_ALPHABET[(value<<(5-bits))&31]; }
-  while(output.length%8!==0) output+='=';
-  return output;
-}
-function base32Decode(str){
-  str = str.replace(/=+$/,'').toUpperCase();
-  let bits=0,value=0; const out=[];
-  for(const c of str){
-    const idx = B32_ALPHABET.indexOf(c); if(idx===-1) continue;
-    value=(value<<5)|idx; bits+=5;
-    if(bits>=8){ out.push((value>>>(bits-8))&0xff); bits-=8; }
-  }
-  return new Uint8Array(out);
-}
-function bytesToBase64(bytes){
-  let bin=''; for(let i=0;i<bytes.length;i++) bin+=String.fromCharCode(bytes[i]);
-  return btoa(bin);
-}
-function base64ToBytes(b64){
-  const bin = atob(b64); const out = new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++) out[i]=bin.charCodeAt(i);
-  return out;
-}
-
-let baseMode='encode';
-setupChipGroup('baseModeSel', chip=>{
-  baseMode = chip.dataset.mode;
-  document.getElementById('baseInputLabel').textContent = baseMode==='encode' ? 'ข้อความ / ไฟล์ต้นทาง' : 'สตริง Base32/64 ต้นทาง';
-});
-document.getElementById('baseKind').addEventListener('change', e=>{
-  const isFile = e.target.value !== 'text';
-  document.getElementById('baseFileField').style.display = isFile ? 'block':'none';
-  document.getElementById('baseTextField').style.display = isFile ? 'none':'block';
-});
-
-function runBaseConvert(){
-  const type = document.getElementById('baseType').value;
-  const kind = document.getElementById('baseKind').value;
-  const previewWrap = document.getElementById('basePreviewWrap');
-  previewWrap.innerHTML = '';
-
-  if(kind !== 'text'){
-    const f = document.getElementById('baseFile').files[0];
-    if(!f) return toast('กรุณาเลือกไฟล์ก่อน');
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      const bytes = new Uint8Array(reader.result);
-      const encoded = type==='64' ? bytesToBase64(bytes) : base32Encode(bytes);
-      renderOut('baseOut', baseMode==='encode' ? encoded : '(กรุณาเลือกโหมด Encode สำหรับไฟล์)');
-      if(kind==='png'){
-        const img = document.createElement('img');
-        img.src = 'data:image/png;base64,'+bytesToBase64(bytes);
-        img.style.cssText='max-width:180px;border-radius:10px;margin-top:14px;border:1px solid var(--line);animation:scaleIn .4s ease both;';
-        previewWrap.appendChild(img);
-      } else if(kind==='sound'){
-        const audio = document.createElement('audio');
-        audio.controls = true; audio.style.marginTop='14px'; audio.style.width='100%';
-        audio.src = URL.createObjectURL(f);
-        previewWrap.appendChild(audio);
-      }
-    };
-    reader.readAsArrayBuffer(f);
-    return;
-  }
-
-  const input = document.getElementById('baseInput').value;
-  if(!input) return renderOut('baseOut','');
-  try{
-    if(baseMode==='encode'){
-      const bytes = new TextEncoder().encode(input);
-      renderOut('baseOut', type==='64' ? bytesToBase64(bytes) : base32Encode(bytes));
-    } else {
-      const bytes = type==='64' ? base64ToBytes(input) : base32Decode(input);
-      renderOut('baseOut', new TextDecoder().decode(bytes));
-    }
-  }catch(e){ renderOut('baseOut','⚠ ข้อมูลไม่ถูกต้อง ไม่สามารถ decode ได้'); }
-}
-
-/* =========================================================
-   3) DIALOG MAKER
-   ========================================================= */
-let dialogType='normal';
-setupChipGroup('dialogTypeSel', chip=>{
-  dialogType = chip.dataset.type;
-  document.getElementById('dlgIntentField').style.display = dialogType==='intent' ? 'block':'none';
-  document.getElementById('dlgSoundField').style.display = dialogType==='sound' ? 'block':'none';
-});
-['dlgTitle','dlgMsg','dlgPos','dlgNeg'].forEach(id=>{
-  document.getElementById(id).addEventListener('input', updateDialogPreview);
-});
-function updateDialogPreview(){
-  document.getElementById('prevTitle').textContent = document.getElementById('dlgTitle').value || 'Title';
-  document.getElementById('prevMsg').textContent = document.getElementById('dlgMsg').value || 'Message';
-  document.getElementById('prevPos').textContent = document.getElementById('dlgPos').value || 'OK';
-  document.getElementById('prevNeg').textContent = document.getElementById('dlgNeg').value || 'Cancel';
-  const dlg = document.getElementById('dlgPreview');
-  dlg.style.animation='none'; void dlg.offsetWidth; dlg.style.animation='scaleIn .35s cubic-bezier(.16,1,.3,1) both';
-}
-updateDialogPreview();
-
-function runDialogMaker(){
-  const cls = document.getElementById('dlgClass').value.trim() || 'com/example/app/MainActivity';
-  const title = document.getElementById('dlgTitle').value;
-  const msg = document.getElementById('dlgMsg').value;
-  const pos = document.getElementById('dlgPos').value;
-  const neg = document.getElementById('dlgNeg').value;
-  const L = 'L'+cls+';';
-  let code = `# ===== DEXXELS DIALOG MAKER (${dialogType.toUpperCase()}) =====
-new-instance v0, Landroid/app/AlertDialog$Builder;
-invoke-direct {v0, p0}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;)V
-
-const-string v1, "${title}"
-invoke-virtual {v0, v1}, Landroid/app/AlertDialog$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
-
-const-string v1, "${msg}"
-invoke-virtual {v0, v1}, Landroid/app/AlertDialog$Builder;->setMessage(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
-
-invoke-virtual {v0}, Landroid/app/AlertDialog$Builder;->setCancelable(Z)Landroid/app/AlertDialog$Builder;
-`;
-
-  if(dialogType==='sound'){
-    const res = document.getElementById('dlgSoundRes').value.trim() || 'click_sound';
-    code += `
-# --- play sound when dialog shows ---
-invoke-static {p0}, Landroid/media/MediaPlayer;->create(Landroid/content/Context;I)Landroid/media/MediaPlayer;
-move-result-object v2
-sget v3, L${cls};->R$raw;->${res}:I
-invoke-virtual {v2}, Landroid/media/MediaPlayer;->start()V
-`;
-  }
-
-  code += `
-new-instance v4, L${cls}$1;
-invoke-direct {v4, p0}, L${cls}$1;-><init>(L${cls};)V
-const-string v1, "${pos}"
-invoke-virtual {v0, v1, v4}, Landroid/app/AlertDialog$Builder;->setPositiveButton(Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
-`;
-
-  if(dialogType==='intent'){
-    const target = document.getElementById('dlgIntentTarget').value.trim() || 'com/example/app/SecondActivity';
-    code += `
-# --- positive button starts new Activity ---
-new-instance v5, Landroid/content/Intent;
-invoke-direct {v5, p0, L${target};->class}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
-invoke-virtual {p0, v5}, Landroid/app/Activity;->startActivity(Landroid/content/Intent;)V
-`;
-  }
-
-  code += `const-string v1, "${neg}"
-invoke-virtual {v0, v1, v4}, Landroid/app/AlertDialog$Builder;->setNegativeButton(Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
-
-invoke-virtual {v0}, Landroid/app/AlertDialog$Builder;->create()Landroid/app/AlertDialog;
-move-result-object v6
-`;
-
-  if(dialogType==='custom' || dialogType==='cool'){
-    code += `
-# --- ${dialogType==='cool' ? 'cool design: custom window background + fade animation' : 'custom style applied'} ---
-invoke-virtual {v6}, Landroid/app/AlertDialog;->getWindow()Landroid/view/Window;
-move-result-object v7
-sget v8, L${cls};->R$style;->${dialogType==='cool'?'CoolDialogAnim':'CustomDialogStyle'}:I
-invoke-virtual {v7, v8}, Landroid/view/Window;->setWindowAnimations(I)V
-`;
-  }
-
-  code += `invoke-virtual {v6}, Landroid/app/AlertDialog;->show()V
-# ===== END DIALOG BLOCK =====`;
-
-  renderOut('dlgOut', code);
-  toast('สร้างโค๊ด Dialog สำเร็จ ✓');
-}
-
-/* =========================================================
-   4) SOUNDPOOL MAKER
-   ========================================================= */
-function runSoundPool(){
-  const f = document.getElementById('spFile').files[0];
-  const field = document.getElementById('spFieldName').value.trim() || 'clickSound';
-  const cls = document.getElementById('spClass').value.trim() || 'com/example/app/MainActivity';
-  if(!f) return toast('กรุณาเลือกไฟล์เสียงก่อน');
-
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    const bytes = new Uint8Array(reader.result);
-    const b64 = bytesToBase64(bytes);
-    renderOut('spB64Out', b64.length>4000 ? b64.slice(0,4000)+`\n... (${b64.length-4000} ตัวอักษรเพิ่มเติม ถูกตัดเพื่อแสดงผล — คัดลอกได้เต็มจากปุ่มคัดลอก)` : b64);
-    document.getElementById('spB64Out').dataset.full = b64;
-    document.getElementById('spB64Out').onclick=null;
-
-    const code = `# ===== DEXXELS SOUNDPOOL MAKER =====
-.field private ${field}Pool:Landroid/media/SoundPool;
-.field private ${field}Id:I
-
-# --- inside onCreate, after super call ---
-new-instance v0, Landroid/media/SoundPool$Builder;
-invoke-direct {v0}, Landroid/media/SoundPool$Builder;-><init>()V
-invoke-virtual {v0}, Landroid/media/SoundPool$Builder;->build()Landroid/media/SoundPool;
-move-result-object v1
-iput-object v1, p0, L${cls};->${field}Pool:Landroid/media/SoundPool;
-
-# --- decode base64 sound at runtime and load into SoundPool ---
-const-string v2, "${b64.slice(0,60)}..."   # (ใช้ค่าฐาน64เต็มจากช่องด้านบน)
-invoke-static {v2, v3}, Landroid/util/Base64;->decode(Ljava/lang/String;I)[B
-move-result-object v4
-# write bytes to temp file then load:
-invoke-virtual {v1, v5, v6, v7, v8}, Landroid/media/SoundPool;->load(Ljava/lang/String;I)I
-move-result v9
-iput v9, p0, L${cls};->${field}Id:I
-
-# --- play sound (call this on click) ---
-iget-object v1, p0, L${cls};->${field}Pool:Landroid/media/SoundPool;
-iget v9, p0, L${cls};->${field}Id:I
-const/high16 v10, 0x3f800000    # volume 1.0f
-const/4 v11, 0x1                # loop = false
-const/high16 v12, 0x3f800000    # rate 1.0f
-invoke-virtual/range {v1 .. v12}, Landroid/media/SoundPool;->play(IFFIIF)I
-# ===== END SOUNDPOOL BLOCK =====`;
-    renderOut('spCodeOut', code);
-    toast('แปลงไฟล์เสียงสำเร็จ ✓');
-  };
-  reader.readAsArrayBuffer(f);
-}
-document.getElementById('spB64Out').addEventListener('dblclick', function(){
-  if(this.dataset.full) copyText(this.dataset.full);
-});
-
-/* =========================================================
-   5) TOAST MAKER
-   ========================================================= */
-let toastType='normal';
-setupChipGroup('toastTypeSel', chip=>{
-  toastType = chip.dataset.type;
-  document.getElementById('toastSoundField').style.display = toastType==='sound' ? 'block':'none';
-});
-
-function previewToast(){
-  const wrap = document.getElementById('toastPreviewWrap');
-  const msg = document.getElementById('toastMsg').value || 'Toast message';
-  wrap.innerHTML = `<div class="mock-toast">${esc(msg)}</div>`;
-}
-
-function runToastMaker(){
-  const cls = document.getElementById('toastClass').value.trim() || 'com/example/app/MainActivity';
-  const msg = document.getElementById('toastMsg').value || 'Done!';
-  let code = `# ===== DEXXELS TOAST MAKER (${toastType.toUpperCase()}) =====
-const-string v0, "${msg}"
-invoke-static {p0, v0, v1}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
-move-result-object v2
-`;
-  if(toastType==='sound'){
-    const res = document.getElementById('toastSoundRes').value.trim() || 'toast_sound';
-    code += `
-# --- play accompanying sound ---
-invoke-static {p0}, Landroid/media/MediaPlayer;->create(Landroid/content/Context;I)Landroid/media/MediaPlayer;
-move-result-object v3
-sget v4, L${cls};->R$raw;->${res}:I
-invoke-virtual {v3}, Landroid/media/MediaPlayer;->start()V
-`;
-  }
-  if(toastType==='custom' || toastType==='cool'){
-    code += `
-# --- ${toastType==='cool' ? 'cool design: inflate custom layout with fade-in animation' : 'custom layout for toast'} ---
-invoke-static {p0}, Landroid/view/LayoutInflater;->from(Landroid/content/Context;)Landroid/view/LayoutInflater;
-move-result-object v5
-sget v6, L${cls};->R$layout;->${toastType==='cool'?'cool_toast_layout':'custom_toast_layout'}:I
-const/4 v7, 0x0
-invoke-virtual {v5, v6, v7}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
-move-result-object v8
-invoke-virtual {v2, v8}, Landroid/widget/Toast;->setView(Landroid/view/View;)V
-`;
-  }
-  code += `
-invoke-virtual {v2}, Landroid/widget/Toast;->show()V
-# ===== END TOAST BLOCK =====`;
-  renderOut('toastOut', code);
-  previewToast();
-  toast('สร้างโค๊ด Toast สำเร็จ ✓');
-}
-
-/* =========================================================
-   6) DUMPER (beta) — client-side string/heuristic scan
-   ========================================================= */
-let dumpFiles = [];
-const dumpDrop = document.getElementById('dumpDrop');
-const dumpInput = document.getElementById('dumpFileInput');
-dumpInput.addEventListener('change', e=> addDumpFiles(e.target.files));
-['dragover','dragenter'].forEach(ev=> dumpDrop.addEventListener(ev, e=>{e.preventDefault(); dumpDrop.classList.add('drag');}));
-['dragleave','drop'].forEach(ev=> dumpDrop.addEventListener(ev, e=>{e.preventDefault(); dumpDrop.classList.remove('drag');}));
-dumpDrop.addEventListener('drop', e=>{ addDumpFiles(e.dataTransfer.files); });
-
-function addDumpFiles(list){
-  for(const f of list) dumpFiles.push(f);
-  renderDumpList();
-}
-function renderDumpList(){
-  const wrap = document.getElementById('dumpFileList');
-  wrap.innerHTML = dumpFiles.map((f,i)=>`
-    <div class="file-row"><span class="fname">📄 ${esc(f.name)}</span><span class="fsize">${(f.size/1024/1024).toFixed(2)} MB</span></div>
-  `).join('');
-}
-
-function extractStrings(bytes, minLen=5, maxCount=400){
-  const out = []; let cur = [];
-  for(let i=0;i<bytes.length;i++){
-    const b = bytes[i];
-    if(b>=32 && b<127){ cur.push(String.fromCharCode(b)); }
-    else { if(cur.length>=minLen) out.push(cur.join('')); cur=[]; if(out.length>=maxCount) break; }
-  }
-  if(cur.length>=minLen && out.length<maxCount) out.push(cur.join(''));
-  return out;
-}
-
-function runDumper(){
-  if(dumpFiles.length===0) return toast('กรุณาอัปโหลดไฟล์ก่อน');
-  const btn = event.target;
-  const original = btn.innerHTML;
-  btn.innerHTML = '<span class="spinner"></span> กำลังวิเคราะห์...';
-  btn.disabled = true;
-
-  const f = dumpFiles[0];
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    const bytes = new Uint8Array(reader.result);
-    const strings = extractStrings(bytes);
-    const classLike = strings.filter(s=>/^[A-Za-z_][\w.]*\.(dll|cs)$/.test(s) || /Assembly-CSharp/i.test(s) || /^[A-Z][A-Za-z0-9_]*::[A-Za-z0-9_]+$/.test(s));
-    const namespaces = [...new Set(strings.filter(s=>/^[A-Za-z_][\w]*(\.[A-Za-z_][\w]*)+$/.test(s)).slice(0,60))];
-
-    let report = `===== DEXXELS DUMPER (beta) — ${f.name} =====
-ขนาดไฟล์: ${(f.size/1024/1024).toFixed(2)} MB
-สแกนพบข้อความที่อ่านได้ทั้งหมด: ${strings.length}
-รูปแบบคล้าย namespace/class: ${classLike.length}
-
---- ตัวอย่าง Namespace / Class ที่ตรวจพบ ---
-${namespaces.length ? namespaces.join('\n') : '(ไม่พบรูปแบบที่ชัดเจนในไฟล์นี้)'}
-
---- ตัวอย่าง String อื่นๆ ในไฟล์ (100 รายการแรก) ---
-${strings.slice(0,100).join('\n')}
-
-หมายเหตุ: การวิเคราะห์นี้เป็นการสแกน string เบื้องต้นจากไบต์ของไฟล์ (client-side) เพื่อสำรวจโครงสร้างคร่าวๆ
-สำหรับการ dump metadata แบบเต็มรูปแบบ (type definitions, method offsets ฯลฯ) แนะนำใช้เครื่องมือเฉพาะทางร่วมด้วย
-===== END REPORT =====`;
-
-    setTimeout(()=>{
-      btn.innerHTML = original; btn.disabled=false;
-      openOverlay(f.name, report);
-    }, 600);
-  };
-  reader.readAsArrayBuffer(f);
-}
-
-function openOverlay(title, body){
-  document.getElementById('overlayTitle').textContent = 'Dump Result — ' + title;
-  document.getElementById('overlayBody').textContent = body;
-  document.getElementById('overlayBody').classList.remove('empty');
-  document.getElementById('overlayCopyBtn').onclick = ()=> copyText(body);
-  document.getElementById('dumperOverlay').classList.add('show');
-}
-function closeOverlay(){ document.getElementById('dumperOverlay').classList.remove('show'); }
-
-/* =========================================================
-   7) SPLASH MAKER
-   ========================================================= */
-let splashType='normal';
-let splashLogoB64 = '';
-setupChipGroup('splashTypeSel', chip=> splashType = chip.dataset.type );
-document.getElementById('splashTitle').addEventListener('input', e=> document.getElementById('splashPrevTitle').textContent = e.target.value);
-document.getElementById('splashSub').addEventListener('input', e=> document.getElementById('splashPrevSub').textContent = e.target.value);
-document.getElementById('splashLogo').addEventListener('change', e=>{
-  const f = e.target.files[0]; if(!f) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    splashLogoB64 = reader.result.split(',')[1];
-    const prev = document.getElementById('splashPreview');
-    let img = prev.querySelector('img');
-    if(!img){ img = document.createElement('img'); prev.prepend(img); }
-    img.src = reader.result;
-  };
-  reader.readAsDataURL(f);
-});
-
-function runSplashMaker(){
-  const title = document.getElementById('splashTitle').value;
-  const sub = document.getElementById('splashSub').value;
-  const cls = document.getElementById('splashClass').value.trim() || 'com/example/app/SplashActivity';
-  const next = document.getElementById('splashNext').value.trim() || 'com/example/app/MainActivity';
-  const delay = document.getElementById('splashDelay').value || '2000';
-
-  let code = `# ===== DEXXELS SPLASH MAKER (${splashType.toUpperCase()}) =====
-.class public L${cls};
-.super Landroid/app/Activity;
-
-.method public constructor <init>()V
-    .locals 0
-    invoke-direct {p0}, Landroid/app/Activity;-><init>()V
-    return-void
-.end method
-
-.method protected onCreate(Landroid/os/Bundle;)V
-    .locals 6
-    invoke-super {p0, p1}, Landroid/app/Activity;->onCreate(Landroid/os/Bundle;)V
-
-    sget v0, L${cls};->R$layout;->activity_splash:I
-    invoke-virtual {p0, v0}, Landroid/app/Activity;->setContentView(I)V
-
-    const-string v1, "${title}"
-    const-string v2, "${sub}"
-    # decode logo from base64 (stored as resource / drawable) and set to ImageView
-    sget v3, L${cls};->R$id;->splash_logo:I
-    invoke-virtual {p0, v3}, Landroid/app/Activity;->findViewById(I)Landroid/view/View;
-    move-result-object v4
-    check-cast v4, Landroid/widget/ImageView;
-`;
-
-  if(splashType==='cool' || splashType==='custom'){
-    code += `
-    # --- ${splashType==='cool' ? 'cool design: fade+scale entrance animation' : 'custom fade animation'} ---
-    sget v5, L${cls};->R$anim;->${splashType==='cool'?'splash_fade_scale':'splash_fade'}:I
-    invoke-static {p0, v5}, Landroid/view/animation/AnimationUtils;->loadAnimation(Landroid/content/Context;I)Landroid/view/animation/Animation;
-    move-result-object v5
-    invoke-virtual {v4, v5}, Landroid/view/View;->startAnimation(Landroid/view/animation/Animation;)V
-`;
-  }
-
-  code += `
-    # --- delay then move to next activity ---
-    new-instance v5, Landroid/os/Handler;
-    invoke-direct {v5}, Landroid/os/Handler;-><init>()V
-    new-instance v6, L${cls}$1;
-    invoke-direct {v6, p0}, L${cls}$1;-><init>(L${cls};)V
-    const-wide v0, 0x${(parseInt(delay)||2000).toString(16)}L
-    invoke-virtual {v5, v6, v0, v1}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
-
-    return-void
-.end method
-
-# ---- inner Runnable class (${cls}$1) should implement: ----
-# new-instance v0, Landroid/content/Intent;
-# invoke-direct {v0, p0, L${next};->class}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
-# invoke-virtual {p0, v0}, Landroid/app/Activity;->startActivity(Landroid/content/Intent;)V
-# invoke-virtual {p0}, Landroid/app/Activity;->finish()V
-# ===== END SPLASH BLOCK =====`;
-
-  renderOut('splashOut', code);
-  toast('สร้างโค๊ด Splash Screen สำเร็จ ✓');
-}
-</script>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-white/5 mt-12 py-8 text-center">
+        <p class="text-gray-500 text-sm">CryptoVault Wallet — Design Demo Only</p>
+        <p class="text-gray-600 text-xs mt-1">Not connected to any blockchain network</p>
+    </footer>
+
+    <script>
+        // ========== CONFIGURATION ==========
+        let btcPrice = 67250;
+        let thbRate = 36.72;
+        const balance = 324.10582062;
+        let chartData = [];
+        let currentTimeframe = '1H';
+
+        // ========== UTILITIES ==========
+        function formatCurrency(value, symbol = '$') {
+            if (value >= 1e12) return symbol + (value / 1e12).toFixed(2) + 'T';
+            if (value >= 1e9) return symbol + (value / 1e9).toFixed(2) + 'B';
+            if (value >= 1e6) return symbol + (value / 1e6).toFixed(2) + 'M';
+            return symbol + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatBTC(value) {
+            return value.toFixed(8);
+        }
+
+        // ========== PRICE UPDATES ==========
+        function updatePrices() {
+            // Simulate realistic price fluctuation
+            const volatility = 0.002;
+            const change = (Math.random() - 0.5) * 2 * volatility * btcPrice;
+            btcPrice += change;
+
+            // Keep within realistic bounds
+            if (btcPrice < 60000) btcPrice = 60000 + Math.random() * 1000;
+            if (btcPrice > 75000) btcPrice = 75000 - Math.random() * 1000;
+
+            const usdValue = balance * btcPrice;
+            const high24 = btcPrice * (1 + Math.random() * 0.03);
+            const low24 = btcPrice * (1 - Math.random() * 0.03);
+            const marketCap = btcPrice * 19600000;
+            const volume24 = btcPrice * (250000 + Math.random() * 100000);
+
+            // Update DOM with animation
+            animateValue('usdValue', usdValue, '$');
+            document.getElementById('high24').textContent = formatCurrency(high24);
+            document.getElementById('low24').textContent = formatCurrency(low24);
+            document.getElementById('marketCap').textContent = formatCurrency(marketCap);
+            document.getElementById('volume24').textContent = formatCurrency(volume24);
+
+            convertCurrency();
+            updateChart();
+        }
+
+        function animateValue(id, value, symbol) {
+            const el = document.getElementById(id);
+            el.style.opacity = '0.7';
+            setTimeout(() => {
+                el.textContent = formatCurrency(value, symbol);
+                el.style.opacity = '1';
+            }, 150);
+        }
+
+        // ========== CURRENCY CONVERTER ==========
+        function convertCurrency() {
+            const btc = parseFloat(document.getElementById('btcInput').value) || 0;
+            const usd = btc * btcPrice;
+            const thb = usd * thbRate;
+
+            document.getElementById('usdOutput').value = formatCurrency(usd);
+            document.getElementById('thbOutput').value = formatCurrency(thb, '฿');
+        }
+
+        // ========== CHART ==========
+        const canvas = document.getElementById('priceChart');
+        const ctx = canvas.getContext('2d');
+
+        function initChart() {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            // Generate initial data
+            let price = btcPrice;
+            chartData = [];
+            for (let i = 0; i < 60; i++) {
+                price += (Math.random() - 0.5) * 150;
+                chartData.push(price);
+            }
+        }
+
+        function updateChart() {
+            chartData.push(btcPrice);
+            if (chartData.length > 60) chartData.shift();
+            drawChart();
+        }
+
+        function drawChart() {
+            const w = canvas.offsetWidth;
+            const h = canvas.offsetHeight;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const min = Math.min(...chartData) * 0.998;
+            const max = Math.max(...chartData) * 1.002;
+            const range = max - min;
+
+            // Gradient fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, h);
+            gradient.addColorStop(0, 'rgba(6, 182, 212, 0.25)');
+            gradient.addColorStop(0.5, 'rgba(6, 182, 212, 0.05)');
+            gradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+
+            // Draw filled area
+            ctx.beginPath();
+            ctx.moveTo(0, h);
+
+            chartData.forEach((price, i) => {
+                const x = (i / (chartData.length - 1)) * w;
+                const y = h - ((price - min) / range) * h * 0.85 - h * 0.05;
+
+                if (i === 0) {
+                    ctx.lineTo(x, y);
+                } else {
+                    const prevX = ((i - 1) / (chartData.length - 1)) * w;
+                    const prevY = h - ((chartData[i - 1] - min) / range) * h * 0.85 - h * 0.05;
+                    const cpX = (prevX + x) / 2;
+                    ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
+                }
+            });
+
+            ctx.lineTo(w, h);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Draw line
+            ctx.beginPath();
+            chartData.forEach((price, i) => {
+                const x = (i / (chartData.length - 1)) * w;
+                const y = h - ((price - min) / range) * h * 0.85 - h * 0.05;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    const prevX = ((i - 1) / (chartData.length - 1)) * w;
+                    const prevY = h - ((chartData[i - 1] - min) / range) * h * 0.85 - h * 0.05;
+                    const cpX = (prevX + x) / 2;
+                    ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
+                }
+            });
+
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.shadowColor = 'rgba(6, 182, 212, 0.5)';
+            ctx.shadowBlur = 10;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Current price dot
+            const lastX = w - 2;
+            const lastY = h - ((chartData[chartData.length - 1] - min) / range) * h * 0.85 - h * 0.05;
+
+            ctx.beginPath();
+            ctx.arc(lastX, lastY, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#06b6d4';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(lastX, lastY, 12, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.15)';
+            ctx.fill();
+
+            // Price label
+            ctx.fillStyle = '#06b6d4';
+            ctx.font = 'bold 12px Inter, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('$' + Math.round(btcPrice).toLocaleString(), lastX - 18, lastY + 4);
+        }
+
+        // ========== TIMEFRAME ==========
+        function setTimeframe(tf) {
+            currentTimeframe = tf;
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/30');
+                btn.classList.add('bg-white/5', 'text-gray-400', 'border-white/10');
+            });
+            const activeBtn = document.getElementById('btn-' + tf);
+            activeBtn.classList.remove('bg-white/5', 'text-gray-400', 'border-white/10');
+            activeBtn.classList.add('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/30');
+
+            // Regenerate chart data for effect
+            initChart();
+            drawChart();
+        }
+
+        // ========== MODAL ==========
+        function showWithdraw() {
+            const modal = document.getElementById('withdrawModal');
+            const content = document.getElementById('withdrawContent');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeWithdraw() {
+            const modal = document.getElementById('withdrawModal');
+            const content = document.getElementById('withdrawContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // Close modal on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeWithdraw();
+        });
+
+        // ========== INIT ==========
+        window.addEventListener('load', () => {
+            initChart();
+            updatePrices();
+            setInterval(updatePrices, 3000);
+        });
+
+        window.addEventListener('resize', () => {
+            initChart();
+            drawChart();
+        });
+    </script>
 </body>
 </html>
